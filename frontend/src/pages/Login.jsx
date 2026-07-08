@@ -3,7 +3,7 @@ import { ShopContext } from '../context/ShopContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Mail, EyeOff, Lock, Truck, Heart, ArrowRight, User } from 'lucide-react';
-import tagImg from '../assets/Offside_logo.jpeg';
+import tagImg from '../assets/new_logo.png';
 
 const Login = () => {
 

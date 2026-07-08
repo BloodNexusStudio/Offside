@@ -14,14 +14,8 @@ const Footer = () => {
             ESTD. 2026
           </p>
           <div className="flex items-center gap-6">
-            <a href="#" className="text-gray-400 hover:text-white transition-colors">
+            <a href="https://www.instagram.com/theoffside_in?igsh=MXNtb2hvZ3V2OWR6bQ==" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
                <i className="ri-instagram-line text-xl"></i>
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors">
-               <i className="ri-tiktok-fill text-xl"></i>
-            </a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors">
-               <i className="ri-youtube-fill text-xl"></i>
             </a>
           </div>
         </div>

@@ -18,7 +18,7 @@ const LookbookSection = () => {
           <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-6">
             Lookbook
           </p>
-          <h2 className="text-5xl lg:text-7xl font-heading font-bold uppercase leading-[0.9] text-white mb-8">
+          <h2 className="text-4xl md:text-5xl lg:text-7xl font-heading font-bold uppercase leading-[1] md:leading-[0.9] text-white mb-8">
             BUILT FOR<br/>EVERY MOMENT.
           </h2>
           <p className="text-sm font-medium text-gray-400 mb-12 max-w-sm leading-relaxed">

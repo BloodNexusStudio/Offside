@@ -38,13 +38,13 @@ const Hero = () => {
   }, []);
 
   return (
-    <section ref={heroRef} className="relative w-full h-[calc(100vh-160px)] min-h-[600px] flex items-center bg-offside-white overflow-hidden my-6 sm:my-10">
+    <section ref={heroRef} className="relative w-full min-h-[calc(100vh-160px)] md:h-[calc(100vh-160px)] md:min-h-[600px] flex items-center bg-offside-white overflow-hidden my-6 sm:my-10">
       
       {/* Content Container */}
       <div className="max-w-[1400px] w-full mx-auto grid grid-cols-1 md:grid-cols-2 h-full">
         
         {/* Left Content */}
-        <div className="flex flex-col justify-center h-full px-6 sm:px-12 pt-20 md:pt-0 pb-10">
+        <div className="flex flex-col justify-center h-full px-6 sm:px-12 pt-16 md:pt-0 pb-12">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -54,7 +54,7 @@ const Hero = () => {
               Just Launched
             </p>
             
-            <h1 ref={textRef} className="text-5xl sm:text-7xl lg:text-[4.5rem] xl:text-[5.5rem] font-heading font-bold leading-[0.9] text-offside-black mb-6 uppercase">
+            <h1 ref={textRef} className="text-4xl sm:text-6xl lg:text-[4.5rem] xl:text-[5.5rem] font-heading font-bold leading-[1.1] md:leading-[0.9] text-offside-black mb-6 uppercase">
               <div className="overflow-hidden"><div className="hero-line">MINIMAL</div></div>
               <div className="overflow-hidden"><div className="hero-line">TIMELESS</div></div>
               <div className="overflow-hidden"><div className="hero-line">UNAPOLOGETIC</div></div>
@@ -101,7 +101,7 @@ const Hero = () => {
         </div>
 
         {/* Right Image */}
-        <div className="relative h-full flex items-center justify-center bg-offside-black overflow-hidden group">
+        <div className="relative h-[50vh] min-h-[400px] md:h-full md:min-h-0 flex items-center justify-center bg-offside-black overflow-hidden group">
           <img 
             ref={imageRef}
             src="/hero_model_back.png" 
