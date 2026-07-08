@@ -3,17 +3,22 @@ import { useParams } from 'react-router-dom'
 import { ShopContext } from '../context/ShopContext';
 import { assets } from '../assets/assets';
 import RelatedProducts from '../components/RelatedProducts';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const Product = () => {
 
   const { productId } = useParams();
-  const { products, currency ,addToCart } = useContext(ShopContext);
+  const { products, currency ,addToCart, token, backendUrl, navigate } = useContext(ShopContext);
   const [productData, setProductData] = useState(false);
   const [image, setImage] = useState('')
   const [size,setSize] = useState('')
+  const [activeTab, setActiveTab] = useState('description')
+  
+  const [rating, setRating] = useState(5)
+  const [reviewText, setReviewText] = useState('')
 
   const fetchProductData = async () => {
-
     products.map((item) => {
       if (item._id === productId) {
         setProductData(item)
@@ -21,12 +26,52 @@ const Product = () => {
         return null;
       }
     })
+  }
 
+  const onSubmitReview = async (e) => {
+    e.preventDefault();
+    if (!token) {
+        toast.error("Please login to submit a review");
+        return;
+    }
+    try {
+        const response = await axios.post(backendUrl + '/api/product/review', {
+            productId: productData._id,
+            rating,
+            text: reviewText
+        }, { headers: { token } });
+
+        if (response.data.success) {
+            toast.success("Review submitted successfully");
+            setReviewText('');
+            // Optimistically update the productData to show the new review
+            // Since we need the user name which we don't have here perfectly, we can just trigger a reload of products or a manual addition
+            // But since 'products' comes from context, ideally we'd refresh the context, but for now we'll just push a temporary one
+            setProductData(prev => ({
+                ...prev,
+                reviews: [...(prev.reviews || []), { name: "You", rating, text: reviewText, date: Date.now() }]
+            }))
+        } else {
+            toast.error(response.data.message);
+        }
+    } catch (error) {
+        console.log(error);
+        toast.error(error.message);
+    }
   }
 
   useEffect(() => {
     fetchProductData();
   }, [productId,products])
+
+  const reviewsCount = productData?.reviews?.length || 0;
+
+  // Calculate average rating
+  let averageRating = 5;
+  if (reviewsCount > 0) {
+      const sum = productData.reviews.reduce((acc, curr) => acc + curr.rating, 0);
+      averageRating = Math.round(sum / reviewsCount);
+  }
 
   return productData ? (
     <div className='border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100'>
@@ -50,15 +95,16 @@ const Product = () => {
         {/* -------- Product Info ---------- */}
         <div className='flex-1'>
           <h1 className='font-medium text-2xl mt-2'>{productData.name}</h1>
-          <div className=' flex items-center gap-1 mt-2'>
-              <img src={assets.star_icon} alt="" className="w-3 5" />
-              <img src={assets.star_icon} alt="" className="w-3 5" />
-              <img src={assets.star_icon} alt="" className="w-3 5" />
-              <img src={assets.star_icon} alt="" className="w-3 5" />
-              <img src={assets.star_dull_icon} alt="" className="w-3 5" />
-              <p className='pl-2'>(122)</p>
+          <div className='flex items-center gap-1 mt-2'>
+              {[...Array(5)].map((_, i) => (
+                  <img key={i} src={i < averageRating ? assets.star_icon : assets.star_dull_icon} alt="" className="w-3 5" />
+              ))}
+              <p className='pl-2'>({reviewsCount})</p>
           </div>
-          <p className='mt-5 text-3xl font-medium'>{currency}{productData.price}</p>
+          <div className='flex items-center gap-4 mt-5'>
+              {productData.mainPrice > 0 && <p className='text-3xl font-medium text-gray-400 line-through'>{currency}{productData.mainPrice}</p>}
+              <p className='text-3xl font-bold text-offside-black'>{currency}{productData.price}</p>
+          </div>
           <p className='mt-5 text-gray-500 md:w-4/5'>{productData.description}</p>
           <div className='flex flex-col gap-4 my-8'>
               <p>Select Size</p>
@@ -80,13 +126,78 @@ const Product = () => {
 
       {/* ---------- Description & Review Section ------------- */}
       <div className='mt-20'>
-        <div className='flex'>
-          <b className='border px-5 py-3 text-sm'>Description</b>
-          <p className='border px-5 py-3 text-sm'>Reviews (122)</p>
+        <div className='flex cursor-pointer'>
+          <b onClick={() => setActiveTab('description')} className={`border px-5 py-3 text-sm ${activeTab === 'description' ? 'bg-gray-50 text-offside-black' : 'text-gray-500'}`}>Description</b>
+          <p onClick={() => setActiveTab('reviews')} className={`border px-5 py-3 text-sm ${activeTab === 'reviews' ? 'bg-gray-50 text-offside-black font-bold' : 'text-gray-500'}`}>Reviews ({reviewsCount})</p>
         </div>
         <div className='flex flex-col gap-4 border px-6 py-6 text-sm text-gray-500'>
-          <p>An e-commerce website is an online platform that facilitates the buying and selling of products or services over the internet. It serves as a virtual marketplace where businesses and individuals can showcase their products, interact with customers, and conduct transactions without the need for a physical presence. E-commerce websites have gained immense popularity due to their convenience, accessibility, and the global reach they offer.</p>
-          <p>E-commerce websites typically display products or services along with detailed descriptions, images, prices, and any available variations (e.g., sizes, colors). Each product usually has its own dedicated page with relevant information.</p>
+          
+          {activeTab === 'description' ? (
+              <>
+                <p>Crafted for those who refuse to blend in, OFFSIDE pieces are engineered with an uncompromising focus on quality and silhouette. Every garment is cut from premium heavy-weight fabrics, delivering an oversized, structured fit that effortlessly bridges the gap between high-end fashion and everyday streetwear.</p>
+                <p>Our commitment to the "Minimal. Timeless. Unapologetic." ethos means stripping away the unnecessary and leaving only raw attitude. Each drop is meticulously designed to be a versatile staple in your wardrobe, ensuring you look distinct whether you're on the streets or in the studio.</p>
+              </>
+          ) : (
+              <div className="flex flex-col gap-8">
+                  {/* Reviews List */}
+                  {reviewsCount === 0 ? (
+                      <p>No reviews yet. Be the first to review this product!</p>
+                  ) : (
+                      <div className="flex flex-col gap-6">
+                          {productData.reviews.map((review, index) => (
+                              <div key={index} className="flex flex-col gap-2 pb-6 border-b border-gray-100 last:border-none">
+                                  <div className="flex items-center gap-2">
+                                      <div className="w-8 h-8 rounded-full bg-offside-black text-white flex items-center justify-center font-bold uppercase">
+                                          {review.name.charAt(0)}
+                                      </div>
+                                      <div>
+                                          <p className="font-bold text-offside-black">{review.name}</p>
+                                          <div className="flex items-center gap-1">
+                                            {[...Array(5)].map((_, i) => (
+                                                <img key={i} src={i < review.rating ? assets.star_icon : assets.star_dull_icon} alt="" className="w-2.5 h-2.5" />
+                                            ))}
+                                            <span className="text-[10px] ml-2 text-gray-400">{new Date(review.date).toLocaleDateString()}</span>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <p className="text-gray-600 mt-2">{review.text}</p>
+                              </div>
+                          ))}
+                      </div>
+                  )}
+
+                  {/* Review Form */}
+                  <div className="mt-4 pt-6 border-t border-gray-200">
+                      <h3 className="font-bold text-lg text-offside-black mb-4">Leave a Review</h3>
+                      {token ? (
+                          <form onSubmit={onSubmitReview} className="flex flex-col gap-4 max-w-lg">
+                              <div className="flex items-center gap-2">
+                                  <label className="font-medium text-offside-black mr-2">Rating:</label>
+                                  {[1,2,3,4,5].map((star) => (
+                                      <img 
+                                        key={star}
+                                        src={star <= rating ? assets.star_icon : assets.star_dull_icon}
+                                        className="w-5 h-5 cursor-pointer"
+                                        onClick={() => setRating(star)}
+                                        alt={`Rate ${star} stars`}
+                                      />
+                                  ))}
+                              </div>
+                              <textarea 
+                                required
+                                value={reviewText}
+                                onChange={(e) => setReviewText(e.target.value)}
+                                placeholder="Share your thoughts about this product..."
+                                className="border border-gray-300 p-3 rounded-none focus:outline-none focus:border-offside-black min-h-[100px] text-gray-800"
+                              ></textarea>
+                              <button type="submit" className="bg-offside-black text-white px-6 py-3 font-bold text-xs uppercase tracking-widest self-start hover:opacity-80 transition-opacity">Submit Review</button>
+                          </form>
+                      ) : (
+                          <p className="text-offside-black bg-gray-50 p-4 font-medium">Please <span className="underline cursor-pointer" onClick={() => navigate('/login')}>log in</span> to write a review.</p>
+                      )}
+                  </div>
+              </div>
+          )}
         </div>
       </div>
 

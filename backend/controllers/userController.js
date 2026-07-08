@@ -100,4 +100,54 @@ const adminLogin = async (req, res) => {
 }
 
 
-export { loginUser, registerUser, adminLogin }
+// Route to get user profile
+const getUserProfile = async (req, res) => {
+    try {
+        const { userId } = req.body;
+        const user = await userModel.findById(userId).select('-password');
+        if (!user) {
+            return res.json({ success: false, message: "User not found" });
+        }
+        res.json({ success: true, user });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
+// Route to update user profile
+const updateUserProfile = async (req, res) => {
+    try {
+        const { userId, name, email } = req.body;
+        
+        // checking if email is being changed and if it already exists
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.json({ success: false, message: "User not found" });
+        }
+
+        if (email !== user.email) {
+            const emailExists = await userModel.findOne({ email });
+            if (emailExists) {
+                return res.json({ success: false, message: "Email is already in use by another account" });
+            }
+            if (!validator.isEmail(email)) {
+                return res.json({ success: false, message: "Please enter a valid email" });
+            }
+        }
+
+        user.name = name || user.name;
+        user.email = email || user.email;
+
+        await user.save();
+
+        res.json({ success: true, message: "Profile updated successfully", user: { name: user.name, email: user.email } });
+
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
+
+export { loginUser, registerUser, adminLogin, getUserProfile, updateUserProfile }

@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import { assets } from '../assets/assets';
-import Title from '../components/Title';
-import ProductItem from '../components/ProductItem';
+import CollectionProductItem from '../components/CollectionProductItem';
+import { RefreshCw, SlidersHorizontal } from 'lucide-react';
 
 const Collection = () => {
 
@@ -11,21 +11,19 @@ const Collection = () => {
   const [filterProducts,setFilterProducts] = useState([]);
   const [category,setCategory] = useState([]);
   const [subCategory,setSubCategory] = useState([]);
+  const [sizeFilter,setSizeFilter] = useState([]);
   const [sortType,setSortType] = useState('relavent')
 
   const toggleCategory = (e) => {
-
     if (category.includes(e.target.value)) {
         setCategory(prev=> prev.filter(item => item !== e.target.value))
     }
     else{
       setCategory(prev => [...prev,e.target.value])
     }
-
   }
 
   const toggleSubCategory = (e) => {
-
     if (subCategory.includes(e.target.value)) {
       setSubCategory(prev=> prev.filter(item => item !== e.target.value))
     }
@@ -34,8 +32,22 @@ const Collection = () => {
     }
   }
 
-  const applyFilter = () => {
+  const toggleSize = (size) => {
+    if (sizeFilter.includes(size)) {
+      setSizeFilter(prev=> prev.filter(item => item !== size))
+    }
+    else{
+      setSizeFilter(prev => [...prev,size])
+    }
+  }
 
+  const clearAllFilters = () => {
+    setCategory([]);
+    setSubCategory([]);
+    setSizeFilter([]);
+  }
+
+  const applyFilter = () => {
     let productsCopy = products.slice();
 
     if (showSearch && search) {
@@ -50,101 +62,168 @@ const Collection = () => {
       productsCopy = productsCopy.filter(item => subCategory.includes(item.subCategory))
     }
 
-    setFilterProducts(productsCopy)
+    if (sizeFilter.length > 0 ) {
+      // Assuming item.sizes is an array of strings like ["S", "M", "L"]
+      productsCopy = productsCopy.filter(item => item.sizes && item.sizes.some(size => sizeFilter.includes(size)))
+    }
 
+    setFilterProducts(productsCopy)
   }
 
   const sortProduct = () => {
-
     let fpCopy = filterProducts.slice();
 
     switch (sortType) {
       case 'low-high':
         setFilterProducts(fpCopy.sort((a,b)=>(a.price - b.price)));
         break;
-
       case 'high-low':
         setFilterProducts(fpCopy.sort((a,b)=>(b.price - a.price)));
         break;
-
       default:
         applyFilter();
         break;
     }
-
   }
 
   useEffect(()=>{
       applyFilter();
-  },[category,subCategory,search,showSearch,products])
+  },[category,subCategory,sizeFilter,search,showSearch,products])
 
   useEffect(()=>{
     sortProduct();
   },[sortType])
 
   return (
-    <div className='flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t'>
-      
-      {/* Filter Options */}
-      <div className='min-w-60'>
-        <p onClick={()=>setShowFilter(!showFilter)} className='my-2 text-xl flex items-center cursor-pointer gap-2'>FILTERS
-          <img className={`h-3 sm:hidden ${showFilter ? 'rotate-90' : ''}`} src={assets.dropdown_icon} alt="" />
-        </p>
-        {/* Category Filter */}
-        <div className={`border border-gray-300 pl-5 py-3 mt-6 ${showFilter ? '' :'hidden'} sm:block`}>
-          <p className='mb-3 text-sm font-medium'>CATEGORIES</p>
-          <div className='flex flex-col gap-2 text-sm font-light text-gray-700'>
-            <p className='flex gap-2'>
-              <input className='w-3' type="checkbox" value={'Men'} onChange={toggleCategory}/> Men
-            </p>
-            <p className='flex gap-2'>
-              <input className='w-3' type="checkbox" value={'Women'} onChange={toggleCategory}/> Women
-            </p>
-            <p className='flex gap-2'>
-              <input className='w-3' type="checkbox" value={'Kids'} onChange={toggleCategory}/> kids
-            </p>
+    <div className='w-full bg-white'>
+      <div className='max-w-[1600px] mx-auto px-4 sm:px-8 py-10 flex flex-col lg:flex-row gap-10'>
+        
+        {/* Left Sidebar (Filters) */}
+        <div className={`lg:w-64 flex-shrink-0 ${showFilter ? 'block' : 'hidden lg:block'}`}>
+          
+          <div className='flex items-center justify-between mb-8'>
+            <h2 className='text-sm font-bold uppercase tracking-widest text-offside-black'>Filters</h2>
+            <button onClick={clearAllFilters} className='flex items-center gap-1.5 text-[10px] uppercase font-bold text-gray-500 hover:text-offside-black transition-colors'>
+              <RefreshCw className='w-3 h-3' /> Clear All
+            </button>
           </div>
-        </div>
-        {/* SubCategory Filter */}
-        <div className={`border border-gray-300 pl-5 py-3 my-5 ${showFilter ? '' :'hidden'} sm:block`}>
-          <p className='mb-3 text-sm font-medium'>TYPE</p>
-          <div className='flex flex-col gap-2 text-sm font-light text-gray-700'>
-            <p className='flex gap-2'>
-              <input className='w-3' type="checkbox" value={'Topwear'} onChange={toggleSubCategory}/> Topwear
-            </p>
-            <p className='flex gap-2'>
-              <input className='w-3' type="checkbox" value={'Bottomwear'} onChange={toggleSubCategory}/> Bottomwear
-            </p>
-            <p className='flex gap-2'>
-              <input className='w-3' type="checkbox" value={'Winterwear'} onChange={toggleSubCategory}/> Winterwear
-            </p>
+
+          {/* Categories */}
+          <div className='border-t border-gray-200 py-6'>
+            <h3 className='text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-4 flex justify-between'>
+              Categories <span>—</span>
+            </h3>
+            <div className='flex flex-col gap-3'>
+              {['Men', 'Women', 'Kids', 'Unisex'].map(cat => (
+                <label key={cat} className='flex items-center gap-3 cursor-pointer group'>
+                  <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${category.includes(cat) ? 'bg-offside-black border-offside-black' : 'border-gray-300 group-hover:border-gray-400'}`}>
+                    {category.includes(cat) && <span className='w-2 h-2 bg-white rounded-sm'></span>}
+                  </div>
+                  <input type="checkbox" value={cat} onChange={toggleCategory} checked={category.includes(cat)} className="hidden" />
+                  <span className='text-xs font-medium text-gray-700'>{cat}</span>
+                </label>
+              ))}
+            </div>
           </div>
+
+          {/* Type */}
+          <div className='border-t border-gray-200 py-6'>
+            <h3 className='text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-4 flex justify-between'>
+              Type <span>—</span>
+            </h3>
+            <div className='flex flex-col gap-3'>
+              {['T-Shirts', 'Hoodies', 'Bottomwear', 'Jackets', 'Accessories'].map(type => (
+                <label key={type} className='flex items-center gap-3 cursor-pointer group'>
+                  <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${subCategory.includes(type) ? 'bg-offside-black border-offside-black' : 'border-gray-300 group-hover:border-gray-400'}`}>
+                    {subCategory.includes(type) && <span className='w-2 h-2 bg-white rounded-sm'></span>}
+                  </div>
+                  <input type="checkbox" value={type} onChange={toggleSubCategory} checked={subCategory.includes(type)} className="hidden" />
+                  <span className='text-xs font-medium text-gray-700'>{type}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Size */}
+          <div className='border-t border-gray-200 py-6'>
+            <h3 className='text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-4 flex justify-between'>
+              Size <span>—</span>
+            </h3>
+            <div className='grid grid-cols-4 gap-2'>
+              {['XS', 'S', 'M', 'L', 'XL', 'XXL'].map(size => (
+                <button 
+                  key={size}
+                  onClick={() => toggleSize(size)}
+                  className={`py-2 text-[10px] font-bold rounded-sm border transition-colors ${sizeFilter.includes(size) ? 'border-offside-black text-offside-black bg-gray-50' : 'border-gray-200 text-gray-500 hover:border-gray-300'}`}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Color (UI Only) */}
+          <div className='border-t border-gray-200 py-6'>
+            <h3 className='text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-4 flex justify-between'>
+              Color <span>—</span>
+            </h3>
+            <div className='flex flex-wrap gap-3'>
+              <div className='w-6 h-6 rounded-full bg-black border-2 border-black ring-2 ring-transparent hover:ring-gray-300 cursor-pointer transition-all'></div>
+              <div className='w-6 h-6 rounded-full bg-white border-2 border-gray-200 cursor-pointer hover:border-gray-400 transition-colors'></div>
+              <div className='w-6 h-6 rounded-full bg-gray-400 border-2 border-gray-400 cursor-pointer hover:border-gray-500 transition-colors'></div>
+              <div className='w-6 h-6 rounded-full bg-[#d2b48c] border-2 border-[#d2b48c] cursor-pointer hover:opacity-80 transition-opacity'></div>
+              <div className='w-6 h-6 rounded-full bg-[#1c2e4a] border-2 border-[#1c2e4a] cursor-pointer hover:opacity-80 transition-opacity'></div>
+            </div>
+          </div>
+
         </div>
+
+        {/* Right Side (Products) */}
+        <div className='flex-1'>
+          
+          <div className='flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 border-b border-gray-200 pb-4'>
+              <div>
+                  <p className='text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1'>All Products</p>
+                  <div className='flex items-baseline gap-3'>
+                    <h1 className='text-3xl sm:text-4xl font-heading font-bold text-offside-black uppercase tracking-wide'>
+                        All Collections
+                    </h1>
+                    <span className='text-[11px] font-bold uppercase tracking-widest text-gray-400'>
+                        / {filterProducts.length} Products
+                    </span>
+                  </div>
+              </div>
+              
+              <div className='flex items-center gap-2 mt-4 sm:mt-0'>
+                  {/* Mobile Filter Toggle */}
+                  <button onClick={() => setShowFilter(!showFilter)} className='lg:hidden p-2 bg-gray-100 hover:bg-gray-200 rounded-sm text-offside-black transition-colors'>
+                    <SlidersHorizontal className="w-5 h-5" />
+                  </button>
+                  
+                  {/* Sort */}
+                  <select onChange={(e)=>setSortType(e.target.value)} className='border border-offside-black text-xs font-bold uppercase tracking-widest text-offside-black px-4 py-2.5 rounded-md cursor-pointer outline-none hover:bg-gray-50 transition-colors'>
+                    <option value="relavent">Sort By: Featured</option>
+                    <option value="low-high">Sort By: Low to High</option>
+                    <option value="high-low">Sort By: High to Low</option>
+                  </select>
+                  
+                  {/* Settings Icon Button */}
+                  <button className='p-2.5 bg-offside-black text-white rounded-md hover:opacity-80 transition-opacity'>
+                    <SlidersHorizontal className="w-4 h-4" />
+                  </button>
+              </div>
+          </div>
+
+          {/* Map Products */}
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+            {filterProducts.map((item,index)=>(
+                <CollectionProductItem key={index} name={item.name} id={item._id} price={item.price} image={item.image} mainPrice={item.mainPrice} />
+            ))}
+          </div>
+
+        </div>
+
       </div>
-
-      {/* Right Side */}
-      <div className='flex-1'>
-
-        <div className='flex justify-between text-base sm:text-2xl mb-4'>
-            <Title text1={'ALL'} text2={'COLLECTIONS'} />
-            {/* Porduct Sort */}
-            <select onChange={(e)=>setSortType(e.target.value)} className='border-2 border-gray-300 text-sm px-2'>
-              <option value="relavent">Sort by: Relavent</option>
-              <option value="low-high">Sort by: Low to High</option>
-              <option value="high-low">Sort by: High to Low</option>
-            </select>
-        </div>
-
-        {/* Map Products */}
-        <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6'>
-          {
-            filterProducts.map((item,index)=>(
-              <ProductItem key={index} name={item.name} id={item._id} price={item.price} image={item.image} />
-            ))
-          }
-        </div>
-      </div>
-
     </div>
   )
 }

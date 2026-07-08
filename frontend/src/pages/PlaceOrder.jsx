@@ -10,6 +10,7 @@ const PlaceOrder = () => {
 
     const [method, setMethod] = useState('cod');
     const { navigate, backendUrl, token, cartItems, setCartItems, getCartAmount, delivery_fee, products } = useContext(ShopContext);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -50,14 +51,24 @@ const PlaceOrder = () => {
                     console.log(error)
                     toast.error(error)
                 }
+            },
+            modal: {
+                ondismiss: function() {
+                    setIsSubmitting(false);
+                }
             }
         }
         const rzp = new window.Razorpay(options)
+        rzp.on('payment.failed', function (response){
+            setIsSubmitting(false);
+        });
         rzp.open()
     }
 
     const onSubmitHandler = async (event) => {
         event.preventDefault()
+        if (isSubmitting) return;
+        setIsSubmitting(true);
         try {
 
             let orderItems = []
@@ -75,10 +86,12 @@ const PlaceOrder = () => {
                 }
             }
 
+            let finalAmount = getCartAmount() === 0 ? 0 : getCartAmount() - 100;
+
             let orderData = {
                 address: formData,
                 items: orderItems,
-                amount: getCartAmount() + delivery_fee
+                amount: finalAmount > 0 ? finalAmount : 0
             }
             
 
@@ -110,11 +123,14 @@ const PlaceOrder = () => {
                     const responseRazorpay = await axios.post(backendUrl + '/api/order/razorpay', orderData, {headers:{token}})
                     if (responseRazorpay.data.success) {
                         initPay(responseRazorpay.data.order)
+                    } else {
+                        setIsSubmitting(false);
                     }
 
                     break;
 
                 default:
+                    setIsSubmitting(false);
                     break;
             }
 
@@ -122,11 +138,23 @@ const PlaceOrder = () => {
         } catch (error) {
             console.log(error)
             toast.error(error.message)
+            setIsSubmitting(false);
         }
     }
 
 
     return (
+        <>
+        {/* Loading Overlay */}
+        {isSubmitting && (
+            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
+                <div className="bg-white p-8 rounded flex flex-col items-center shadow-2xl">
+                    <div className="w-12 h-12 border-4 border-gray-200 border-t-black rounded-full animate-spin mb-4"></div>
+                    <p className="font-bold tracking-widest text-offside-black uppercase text-sm">Processing...</p>
+                </div>
+            </div>
+        )}
+
         <form onSubmit={onSubmitHandler} className='flex flex-col sm:flex-row justify-between gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t'>
             {/* ------------- Left Side ---------------- */}
             <div className='flex flex-col gap-4 w-full sm:max-w-[480px]'>
@@ -177,11 +205,12 @@ const PlaceOrder = () => {
                     </div>
 
                     <div className='w-full text-end mt-8'>
-                        <button type='submit' className='bg-black text-white px-16 py-3 text-sm'>PLACE ORDER</button>
+                        <button disabled={isSubmitting} type='submit' className={`bg-black text-white px-16 py-3 text-sm ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}>CONFIRM ORDER</button>
                     </div>
                 </div>
             </div>
         </form>
+        </>
     )
 }
 

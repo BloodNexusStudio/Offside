@@ -48,7 +48,7 @@ const LatestCollection = () => {
 
       <div ref={gridRef} className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8'>
         {latestProducts.map((item, index) => (
-            <ProductItem key={index} id={item._id} image={item.image} name={item.name} price={item.price} />
+            <ProductItem key={index} id={item._id} image={item.image} name={item.name} price={item.price} mainPrice={item.mainPrice} />
         ))}
       </div>
     </div>

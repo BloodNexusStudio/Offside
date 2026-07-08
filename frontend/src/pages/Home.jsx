@@ -1,22 +1,19 @@
 import React from 'react'
 import Hero from '../components/Hero'
-import ScrollingBanner from '../components/ScrollingBanner'
-import LatestCollection from '../components/LatestCollection'
-import PaydaySale from '../components/PaydaySale'
+import FeaturesBanner from '../components/FeaturesBanner'
+import CollectionsSection from '../components/CollectionsSection'
 import BestSeller from '../components/BestSeller'
-import OurPolicy from '../components/OurPolicy'
-import NewsletterBox from '../components/NewsletterBox'
+import CultSection from '../components/CultSection'
+import Footer from '../components/Footer'
 
 const Home = () => {
   return (
     <div>
       <Hero />
-      <ScrollingBanner />
-      <LatestCollection/>
-      <PaydaySale />
-      <BestSeller/>
-      <OurPolicy/>
-      <NewsletterBox/>
+      <FeaturesBanner />
+      <CollectionsSection />
+      <BestSeller />
+      <CultSection />
     </div>
   )
 }

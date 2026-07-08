@@ -9,11 +9,12 @@ export default {
       colors: {
         'offside-black': '#000000',
         'offside-white': '#ffffff',
-        'offside-primary': '#e5c641',
-        'offside-light': '#f4f6f6',
+        'offside-gray': '#f3f4f6', // Light gray for sections/cards
+        'offside-darkgray': '#111111', // Very dark for footer/blocks
       },
       fontFamily: {
-        sans: ['Poppins', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
+        heading: ['Oswald', 'sans-serif'],
       },
     },
   },

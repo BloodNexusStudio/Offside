@@ -2,6 +2,7 @@ import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
 import Stripe from 'stripe'
 import razorpay from 'razorpay'
+import sendInvoice from "../utils/sendInvoice.js";
 
 // global variables
 const currency = 'inr'
@@ -34,6 +35,7 @@ const placeOrder = async (req,res) => {
 
         const newOrder = new orderModel(orderData)
         await newOrder.save()
+        sendInvoice(newOrder) // send email invoice asynchronously
 
         await userModel.findByIdAndUpdate(userId,{cartData:{}})
 
@@ -111,7 +113,8 @@ const verifyStripe = async (req,res) => {
 
     try {
         if (success === "true") {
-            await orderModel.findByIdAndUpdate(orderId, {payment:true});
+            const order = await orderModel.findByIdAndUpdate(orderId, {payment:true}, {new: true});
+            sendInvoice(order);
             await userModel.findByIdAndUpdate(userId, {cartData: {}})
             res.json({success: true});
         } else {
@@ -172,7 +175,8 @@ const verifyRazorpay = async (req,res) => {
 
         const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id)
         if (orderInfo.status === 'paid') {
-            await orderModel.findByIdAndUpdate(orderInfo.receipt,{payment:true});
+            const order = await orderModel.findByIdAndUpdate(orderInfo.receipt,{payment:true}, {new: true});
+            sendInvoice(order);
             await userModel.findByIdAndUpdate(userId,{cartData:{}})
             res.json({ success: true, message: "Payment Successful" })
         } else {
@@ -231,4 +235,47 @@ const updateStatus = async (req,res) => {
     }
 }
 
-export {verifyRazorpay, verifyStripe ,placeOrder, placeOrderStripe, placeOrderRazorpay, allOrders, userOrders, updateStatus}
+// Replace Order Item Size
+const replaceOrderItem = async (req, res) => {
+    try {
+        const { userId, orderId, itemId, newSize } = req.body;
+
+        const order = await orderModel.findById(orderId);
+        
+        if (!order) {
+            return res.json({ success: false, message: "Order not found" });
+        }
+        if (order.userId !== userId) {
+            return res.json({ success: false, message: "Not authorized" });
+        }
+        if (order.status !== 'Order Placed' && order.status !== 'Packing') {
+            return res.json({ success: false, message: "Cannot replace items after shipping" });
+        }
+
+        let itemFound = false;
+        const updatedItems = order.items.map(item => {
+            if (item._id.toString() === itemId && !itemFound) {
+                item.size = newSize;
+                itemFound = true;
+            }
+            return item;
+        });
+
+        if (!itemFound) {
+            return res.json({ success: false, message: "Item not found in order" });
+        }
+
+        order.items = updatedItems;
+        // Mongoose sometimes doesn't detect array modifications
+        order.markModified('items');
+        await order.save();
+
+        res.json({ success: true, message: "Item size replaced successfully" });
+
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
+export {verifyRazorpay, verifyStripe ,placeOrder, placeOrderStripe, placeOrderRazorpay, allOrders, userOrders, updateStatus, replaceOrderItem}

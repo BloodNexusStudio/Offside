@@ -14,8 +14,10 @@ const Add = ({token}) => {
    const [name, setName] = useState("");
    const [description, setDescription] = useState("");
    const [price, setPrice] = useState("");
+   const [mainPrice, setMainPrice] = useState("");
    const [category, setCategory] = useState("Men");
    const [subCategory, setSubCategory] = useState("Topwear");
+   const [productCollection, setProductCollection] = useState("None");
    const [bestseller, setBestseller] = useState(false);
    const [sizes, setSizes] = useState([]);
 
@@ -29,8 +31,10 @@ const Add = ({token}) => {
       formData.append("name",name)
       formData.append("description",description)
       formData.append("price",price)
+      formData.append("mainPrice",mainPrice)
       formData.append("category",category)
       formData.append("subCategory",subCategory)
+      formData.append("productCollection",productCollection)
       formData.append("bestseller",bestseller)
       formData.append("sizes",JSON.stringify(sizes))
 
@@ -50,6 +54,7 @@ const Add = ({token}) => {
         setImage3(false)
         setImage4(false)
         setPrice('')
+        setMainPrice('')
       } else {
         toast.error(response.data.message)
       }
@@ -116,8 +121,18 @@ const Add = ({token}) => {
             </div>
 
             <div>
-              <p className='mb-2'>Product Price</p>
-              <input onChange={(e) => setPrice(e.target.value)} value={price} className='w-full px-3 py-2 sm:w-[120px]' type="Number" placeholder='25' />
+              <p className='mb-2'>Collection (Optional)</p>
+              <input onChange={(e) => setProductCollection(e.target.value)} value={productCollection} className='w-full px-3 py-2 sm:w-[150px]' type="text" placeholder='e.g. FIFA' />
+            </div>
+
+            <div>
+              <p className='mb-2'>Main Price</p>
+              <input onChange={(e) => setMainPrice(e.target.value)} value={mainPrice} className='w-full px-3 py-2 sm:w-[120px]' type="Number" placeholder='e.g. 2000' />
+            </div>
+
+            <div>
+              <p className='mb-2'>Offer Price</p>
+              <input onChange={(e) => setPrice(e.target.value)} value={price} className='w-full px-3 py-2 sm:w-[120px]' type="Number" placeholder='e.g. 1500' required />
             </div>
 
         </div>
@@ -143,6 +158,10 @@ const Add = ({token}) => {
 
             <div onClick={()=>setSizes(prev => prev.includes("XXL") ? prev.filter( item => item !== "XXL") : [...prev,"XXL"])}>
               <p className={`${sizes.includes("XXL") ? "bg-pink-100" : "bg-slate-200" } px-3 py-1 cursor-pointer`}>XXL</p>
+            </div>
+
+            <div onClick={()=>setSizes(prev => prev.includes("Free Size") ? prev.filter( item => item !== "Free Size") : [...prev,"Free Size"])}>
+              <p className={`${sizes.includes("Free Size") ? "bg-pink-100" : "bg-slate-200" } px-3 py-1 cursor-pointer`}>Free Size</p>
             </div>
           </div>
         </div>
