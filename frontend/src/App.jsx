@@ -16,6 +16,8 @@ import Footer from './components/Footer'
 import SearchBar from './components/SearchBar'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsConditions from './pages/TermsConditions';
 import Verify from './pages/Verify'
 import PageTransition from './components/PageTransition'
 import ScrollToTop from './components/ScrollToTop'
@@ -43,6 +45,8 @@ const App = () => {
             <Route path='/orders' element={<PageTransition><Orders /></PageTransition>} />
             <Route path='/profile' element={<PageTransition><Profile /></PageTransition>} />
             <Route path='/verify' element={<PageTransition><Verify /></PageTransition>} />
+            <Route path='/privacy-policy' element={<PageTransition><PrivacyPolicy /></PageTransition>} />
+            <Route path='/terms-conditions' element={<PageTransition><TermsConditions /></PageTransition>} />
           </Routes>
         </AnimatePresence>
       </main>

@@ -58,8 +58,8 @@ const Footer = () => {
       <div className="max-w-[1400px] mx-auto mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-medium text-gray-500">
         <p>© OFFSIDE 2026. All rights reserved.</p>
         <div className="flex items-center gap-6">
-            <Link to="#" className="hover:text-gray-300 transition-colors">Privacy Policy</Link>
-            <Link to="#" className="hover:text-gray-300 transition-colors">Terms & Conditions</Link>
+            <Link to="/privacy-policy" className="hover:text-gray-300 transition-colors">Privacy Policy</Link>
+            <Link to="/terms-conditions" className="hover:text-gray-300 transition-colors">Terms & Conditions</Link>
         </div>
       </div>
     </footer>
