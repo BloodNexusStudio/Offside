@@ -21,6 +21,8 @@ import TermsConditions from './pages/TermsConditions';
 import Verify from './pages/Verify'
 import PageTransition from './components/PageTransition'
 import ScrollToTop from './components/ScrollToTop'
+import RefundPolicy from './pages/RefundPolicy';
+import ShippingPolicy from './pages/ShippingPolicy';
 
 const App = () => {
   const location = useLocation()
@@ -47,6 +49,8 @@ const App = () => {
             <Route path='/verify' element={<PageTransition><Verify /></PageTransition>} />
             <Route path='/privacy-policy' element={<PageTransition><PrivacyPolicy /></PageTransition>} />
             <Route path='/terms-conditions' element={<PageTransition><TermsConditions /></PageTransition>} />
+            <Route path='/refund-policy' element={<PageTransition><RefundPolicy /></PageTransition>} />
+            <Route path='/shipping-policy' element={<PageTransition><ShippingPolicy /></PageTransition>} />
           </Routes>
         </AnimatePresence>
       </main>
