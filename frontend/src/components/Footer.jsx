@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 
 const Footer = () => {
   return (
-    <footer className="bg-offside-black text-white pt-24 pb-8 px-6 sm:px-12 w-full">
-      <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-8 border-b border-gray-800 pb-16">
+    <footer className="bg-offside-black text-white pt-24 pb-8 w-full">
+      <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-8 border-b border-gray-800 pb-16">
         
         {/* Left Side - Brand */}
         <div className="md:col-span-4 lg:col-span-5">
@@ -55,12 +55,11 @@ const Footer = () => {
       </div>
 
       {/* Bottom Legal */}
-      <div className="max-w-[1400px] mx-auto mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-medium text-gray-500">
+      <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-medium text-gray-500">
         <p>© OFFSIDE 2026. All rights reserved.</p>
         <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6">
             <Link to="/privacy-policy" className="hover:text-gray-300 transition-colors">Privacy Policy</Link>
             <Link to="/terms-conditions" className="hover:text-gray-300 transition-colors">Terms & Conditions</Link>
-            <Link to="/refund-policy" className="hover:text-gray-300 transition-colors">Refund Policy</Link>
             <Link to="/shipping-policy" className="hover:text-gray-300 transition-colors">Shipping Policy</Link>
         </div>
       </div>

@@ -55,7 +55,7 @@ const BestSeller = () => {
     }, [newDrops]);
 
     return (
-        <section ref={sectionRef} className="w-full bg-offside-white py-24 px-6 sm:px-12">
+        <section ref={sectionRef} className="w-full py-24 px-6 sm:px-12">
             <div className="max-w-[1400px] mx-auto">
                 
                 {/* Header */}
@@ -87,6 +87,24 @@ const BestSeller = () => {
                             />
                         </div>
                     ))}
+
+                    {/* Editorial Spacer for empty columns */}
+                    {newDrops.length < 4 && (
+                        <div className={`col-span-2 hidden lg:flex flex-col justify-end p-8 xl:p-12 border border-gray-300/50 rounded-xl bg-[#ebe9e1]/40 backdrop-blur-sm shadow-sm relative overflow-hidden group`}>
+                            <div className="absolute top-8 right-8 w-12 h-12 border border-gray-400/50 rounded-full flex items-center justify-center">
+                                <span className="text-[10px] font-bold text-gray-600">01</span>
+                            </div>
+                            <h3 className="text-[4rem] xl:text-[5.5rem] font-heading font-black text-offside-black opacity-[0.08] leading-[0.8] mb-6 whitespace-nowrap group-hover:scale-105 transition-transform duration-700">
+                                THE ARCHIVE
+                            </h3>
+                            <p className="text-sm font-medium text-gray-700 max-w-sm leading-relaxed">
+                                Explore our full collection of minimal, timeless, and unapologetic essentials designed to outlast trends.
+                            </p>
+                            <Link to="/collection" className="mt-8 text-[10px] font-bold uppercase tracking-widest text-offside-black border-b border-offside-black self-start hover:opacity-60 transition-opacity pb-1">
+                                View Entire Archive →
+                            </Link>
+                        </div>
+                    )}
                 </div>
 
             </div>

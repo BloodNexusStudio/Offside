@@ -21,19 +21,20 @@ import TermsConditions from './pages/TermsConditions';
 import Verify from './pages/Verify'
 import PageTransition from './components/PageTransition'
 import ScrollToTop from './components/ScrollToTop'
-import RefundPolicy from './pages/RefundPolicy';
 import ShippingPolicy from './pages/ShippingPolicy';
+
+import Chatbot from './components/Chatbot';
 
 const App = () => {
   const location = useLocation()
 
   return (
-    <div className='min-h-screen bg-offside-white flex flex-col'>
+    <div className='min-h-screen flex flex-col'>
       <ScrollToTop />
       <ToastContainer />
       <Navbar />
       <SearchBar />
-      <main className="flex-grow w-full max-w-[1600px] mx-auto px-6 md:px-12 lg:px-24">
+      <main className="flex-grow w-full px-4 sm:px-8 lg:px-12 xl:px-16">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path='/' element={<PageTransition><Home /></PageTransition>} />
@@ -49,11 +50,11 @@ const App = () => {
             <Route path='/verify' element={<PageTransition><Verify /></PageTransition>} />
             <Route path='/privacy-policy' element={<PageTransition><PrivacyPolicy /></PageTransition>} />
             <Route path='/terms-conditions' element={<PageTransition><TermsConditions /></PageTransition>} />
-            <Route path='/refund-policy' element={<PageTransition><RefundPolicy /></PageTransition>} />
             <Route path='/shipping-policy' element={<PageTransition><ShippingPolicy /></PageTransition>} />
           </Routes>
         </AnimatePresence>
       </main>
+      <Chatbot />
       <Footer />
     </div>
   )

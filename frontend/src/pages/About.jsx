@@ -48,7 +48,7 @@ const About = () => {
   }, []);
 
   return (
-    <div className="w-full bg-white">
+    <div className="w-full">
       
       {/* 1. HERO SECTION */}
       <section ref={heroRef} className="grid grid-cols-1 md:grid-cols-2 min-h-[85vh]">
@@ -88,7 +88,7 @@ const About = () => {
         {/* Right Image */}
         <div className="h-full bg-gray-100 overflow-hidden">
             <img 
-                src="/hero_model_back.png" 
+                src="/hero_model_back.jpeg" 
                 alt="Model Back" 
                 className="w-full h-full object-cover grayscale"
             />
@@ -103,12 +103,16 @@ const About = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="w-full aspect-[4/3] bg-gray-100 overflow-hidden"
+            className="w-full flex items-center justify-center relative"
         >
             <img 
-                src={assets.logo} 
-                alt="Offside Tag" 
-                className="w-full h-full object-cover grayscale opacity-90"
+                src="/PROD_BG.png" 
+                alt="Offside Product" 
+                className="w-full max-w-[600px] object-contain mix-blend-multiply drop-shadow-lg"
+                style={{
+                    WebkitMaskImage: 'linear-gradient(to bottom, black 80%, transparent 100%)',
+                    maskImage: 'linear-gradient(to bottom, black 80%, transparent 100%)'
+                }}
             />
         </motion.div>
         
@@ -131,61 +135,75 @@ const About = () => {
                 We're a new brand with big dreams and a clear direction. This is just the beginning.
             </p>
             
-            {/* Features Row */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 border-t border-gray-100 pt-8">
-                <div>
-                    <Lightbulb className="w-6 h-6 stroke-[1.5] text-offside-black mb-4" />
-                    <h4 className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-offside-black mb-2">New Start</h4>
-                    <p className="text-xs text-gray-500 font-medium">A new brand with a bold mindset.</p>
-                </div>
-                <div>
-                    <Target className="w-6 h-6 stroke-[1.5] text-offside-black mb-4" />
-                    <h4 className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-offside-black mb-2">Clear Vision</h4>
-                    <p className="text-xs text-gray-500 font-medium">Focused on quality, design and impact.</p>
-                </div>
-                <div>
-                    <Star className="w-6 h-6 stroke-[1.5] text-offside-black mb-4" />
-                    <h4 className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-offside-black mb-2">Built To Last</h4>
-                    <p className="text-xs text-gray-500 font-medium">Timeless pieces made to outlive trends.</p>
-                </div>
-            </div>
         </div>
       </section>
 
       {/* 3. OUR MISSION */}
-      <section ref={missionRef} className="w-full bg-offside-black text-white grid grid-cols-1 md:grid-cols-2">
-        <div className="flex flex-col justify-center px-6 sm:px-24 py-20">
+      <section ref={missionRef} className="max-w-[1600px] mx-auto w-full grid grid-cols-1 lg:grid-cols-2 pt-8 pb-24 px-6 sm:px-12 lg:gap-8">
+        
+        {/* Left Content */}
+        <div className="flex flex-col justify-center h-full pt-12">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
+                className="flex flex-col h-full justify-between"
             >
-                <div className="flex items-center gap-4 mb-4">
-                    <p className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-gray-400">Our Mission</p>
-                    <div className="h-[1px] w-16 bg-white/20"></div>
-                </div>
-                
-                <h2 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-bold leading-[0.9] text-white mb-8 uppercase">
-                    To Create Essentials<br />
-                    That Become Your Everyday<br />
-                    Statement.
-                </h2>
-                
-                <p className="text-sm font-medium text-gray-400 max-w-md leading-relaxed mb-8">
-                    We design minimal, high-quality clothing that fits into your life and elevates your style.
-                </p>
+                <div>
+                    <div className="flex items-center gap-4 mb-6">
+                        <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-gray-500">Our Mission</p>
+                        <div className="h-[1px] w-12 bg-gray-300"></div>
+                    </div>
+                    
+                    <h2 className="text-5xl sm:text-6xl lg:text-[5rem] xl:text-[5.8rem] font-heading font-black leading-[0.85] text-offside-black mb-10 uppercase tracking-tighter max-w-full break-words">
+                        To Create<br />
+                        Essentials<br />
+                        That Become<br />
+                        Your Everyday<br />
+                        Statement.
+                    </h2>
+                    
+                    <p className="text-sm font-medium text-gray-600 max-w-sm leading-relaxed mb-8">
+                        We design minimal, high-quality clothing that fits into your life and elevates your style.
+                    </p>
 
-                <div className="italic font-serif text-3xl opacity-80">Offside</div>
+                    <div className="italic font-serif text-4xl text-offside-black mb-20">Offside</div>
+                </div>
+
+                {/* Features Row */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-6 border-t border-gray-300/60 pt-10">
+                    <div className="pr-4">
+                        <Lightbulb className="w-5 h-5 stroke-[1.5] text-offside-black mb-4" />
+                        <h4 className="text-[10px] font-bold uppercase tracking-widest text-offside-black mb-2">New Start</h4>
+                        <p className="text-[11px] text-gray-500 font-medium leading-relaxed">A new brand with<br/>a bold mindset.</p>
+                    </div>
+                    <div className="pr-4">
+                        <Target className="w-5 h-5 stroke-[1.5] text-offside-black mb-4" />
+                        <h4 className="text-[10px] font-bold uppercase tracking-widest text-offside-black mb-2">Clear Vision</h4>
+                        <p className="text-[11px] text-gray-500 font-medium leading-relaxed">Focused on quality,<br/>design and impact.</p>
+                    </div>
+                    <div>
+                        <Star className="w-5 h-5 stroke-[1.5] text-offside-black mb-4" />
+                        <h4 className="text-[10px] font-bold uppercase tracking-widest text-offside-black mb-2">Built To Last</h4>
+                        <p className="text-[11px] text-gray-500 font-medium leading-relaxed">Timeless pieces<br/>made to outlive trends.</p>
+                    </div>
+                </div>
             </motion.div>
         </div>
         
-        <div className="h-full bg-black overflow-hidden">
+        {/* Right Image */}
+        <div className="h-full flex items-start justify-center relative mt-16 lg:mt-0 lg:ml-12 pt-12 lg:-translate-y-8">
+            {/* Fade out bottom of image using CSS mask */}
             <img 
                 ref={missionImgRef}
-                src="https://images.unsplash.com/photo-1567113463300-102a7eb3cb26?q=80&w=2000&auto=format&fit=crop" 
-                alt="Shirts on rack" 
-                className="w-full h-full object-cover opacity-60"
+                src="/RONALDO_BG.png" 
+                alt="Offside Mission" 
+                className="w-full max-w-[700px] object-contain mix-blend-multiply drop-shadow-lg"
+                style={{
+                    WebkitMaskImage: 'linear-gradient(to bottom, black 80%, transparent 100%)',
+                    maskImage: 'linear-gradient(to bottom, black 80%, transparent 100%)'
+                }}
             />
         </div>
       </section>

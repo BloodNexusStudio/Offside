@@ -18,26 +18,19 @@ const CartTotal = () => {
                 <p className='font-medium'>{currency} {getCartAmount()}.00</p>
             </div>
             <div className='flex justify-between'>
-                <p className='text-gray-600'>Member Savings</p>
-                <p className='text-green-600'>- {currency} {getCartAmount() > 0 ? 100 : 0}.00</p>
-            </div>
-            <div className='flex justify-between'>
                 <p className='text-gray-600'>Shipping Charges</p>
                 <div className='flex items-center gap-2'>
                   {getCartAmount() > 0 ? (
-                    <>
-                      <span className='line-through text-gray-400'>{currency} {delivery_fee}.00</span>
-                      <span className='text-green-600'>Free</span>
-                    </>
+                    <p className='font-medium'>{currency} {delivery_fee}.00</p>
                   ) : (
                     <p>{currency} 0.00</p>
                   )}
                 </div>
             </div>
-            <hr className='my-1' />
-            <div className='flex justify-between text-base'>
-                <b>Total Amount(Incl. of GST)</b>
-                <b>{currency} {getCartAmount() === 0 ? 0 : getCartAmount() - 100}.00</b>
+            <hr className='my-2 border-gray-300' />
+            <div className='flex justify-between text-base pt-2'>
+                <b className="text-offside-black tracking-wide">Total Amount (Incl. of GST)</b>
+                <b className="text-offside-black">{currency} {getCartAmount() === 0 ? 0 : getCartAmount() + delivery_fee}.00</b>
             </div>
       </div>
     </div>

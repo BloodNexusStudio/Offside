@@ -3,7 +3,7 @@ import { ShieldCheck, Shirt, Clock, Lock } from 'lucide-react'
 
 const FeaturesBanner = () => {
   return (
-    <div className="bg-white text-offside-black py-10 px-6 sm:px-12 w-full border-b border-gray-200">
+    <div className="text-offside-black py-10 px-6 sm:px-12 w-full border-b border-gray-200">
       <div className="max-w-[1400px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 divide-y sm:divide-y-0 sm:divide-x divide-gray-200">
         
         <div className="flex items-center gap-4 pt-4 sm:pt-0 sm:pl-8 first:pl-0 first:pt-0">

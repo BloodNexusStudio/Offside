@@ -40,15 +40,15 @@ const Navbar = () => {
     <>
         {/* Top Banner */}
         <div className="bg-offside-black text-offside-white text-[10px] sm:text-xs font-bold py-2 text-center uppercase tracking-widest relative z-[60]">
-            Free shipping on orders above ₹1999
+            PREMIUM STREETWEAR. DESIGNED IN INDIA.
         </div>
 
-        <div className={`sticky top-0 w-full z-50 transition-all duration-300 px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] 
-            ${scrolled ? 'py-4 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100/50' : 'py-6 bg-offside-white border-b border-gray-200'}`}>
-            <div className='flex items-center justify-between'>
+        <div className={`sticky top-0 w-full z-50 transition-all duration-300 
+            ${scrolled ? 'py-4 bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-200' : 'py-6 bg-transparent border-b border-gray-300/50'}`}>
+            <div className='w-full px-4 sm:px-8 lg:px-12 xl:px-16 flex items-center justify-between'>
                 
                 <Link to='/' className="flex items-center gap-2 relative z-50">
-                    <img src={assets.logo} alt="OFFSIDE" className="h-6 sm:h-10 scale-[1.5] sm:scale-[2.5] origin-left object-contain" />
+                    <img src={assets.logo} alt="OFFSIDE" className="h-8 sm:h-12 scale-[1.8] sm:scale-[2.8] origin-left object-contain" />
                 </Link>
 
                 <ul className='hidden lg:flex gap-12 text-[13px] font-bold uppercase tracking-widest text-offside-black'>

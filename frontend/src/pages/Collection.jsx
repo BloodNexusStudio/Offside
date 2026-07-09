@@ -95,7 +95,7 @@ const Collection = () => {
   },[sortType])
 
   return (
-    <div className='w-full bg-white'>
+    <div className='w-full'>
       <div className='max-w-[1600px] mx-auto px-4 sm:px-8 py-10 flex flex-col lg:flex-row gap-10'>
         
         {/* Left Sidebar (Filters) */}

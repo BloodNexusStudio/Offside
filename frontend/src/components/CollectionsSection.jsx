@@ -11,8 +11,8 @@ const CollectionsSection = () => {
 
   const collections = [
     {
-        title: "FIFA\nCOLLECTION",
-        image: "/hero_model_back.png",
+        title: "F1\nCOLLECTION",
+        image: "/f1_collection.png",
         link: "#"
     },
     {
