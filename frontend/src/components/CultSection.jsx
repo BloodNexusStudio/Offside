@@ -70,7 +70,7 @@ const CultSection = () => {
             <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-20 rotate-3 bg-[#fdfbf7] p-2 sm:p-4 pb-12 sm:pb-16 shadow-[0_20px_60px_rgba(0,0,0,0.3)] transition-transform hover:scale-105 duration-500 cursor-pointer border border-gray-200 mt-8 sm:mt-12">
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-20 sm:w-28 h-6 sm:h-8 bg-zinc-800/90 -rotate-2 shadow-md"></div>
                 <div className="w-[160px] sm:w-[240px] lg:w-[280px] aspect-[4/5] bg-gray-200 overflow-hidden">
-                    <img src="/cult_2.png" alt="Cult 2" className="w-full h-full object-cover" />
+                    <img src="/off.jpeg" alt="Cult 2" className="w-full h-full object-cover" />
                 </div>
             </div>
 
