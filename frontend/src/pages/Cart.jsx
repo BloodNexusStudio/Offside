@@ -31,12 +31,7 @@ const Cart = () => {
   }, [cartItems, products])
 
   const handleCheckout = () => {
-      if (!token) {
-          toast.info("Please login to proceed to checkout");
-          navigate('/login');
-      } else {
-          navigate('/place-order');
-      }
+      navigate('/place-order');
   }
 
   return (
