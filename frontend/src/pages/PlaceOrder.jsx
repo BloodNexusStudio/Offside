@@ -110,10 +110,21 @@ const PlaceOrder = () => {
             let orderItems = []
 
             for (const items in cartItems) {
+                const [baseId, color] = items.split('_');
                 for (const item in cartItems[items]) {
                     if (cartItems[items][item] > 0) {
-                        const itemInfo = structuredClone(products.find(product => product._id === items))
+                        const itemInfo = structuredClone(products.find(product => product._id === baseId))
                         if (itemInfo) {
+                            if (color) {
+                                itemInfo.name = `${itemInfo.name} (${color})`;
+                                // Also update image if we have one for this color
+                                if (itemInfo.colors && itemInfo.colors.length > 0) {
+                                    const colorData = itemInfo.colors.find(c => c.colorName === color);
+                                    if (colorData && colorData.images[0]) {
+                                        itemInfo.image[0] = colorData.images[0];
+                                    }
+                                }
+                            }
                             itemInfo.size = item
                             itemInfo.quantity = cartItems[items][item]
                             orderItems.push(itemInfo)

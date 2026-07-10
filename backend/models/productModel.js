@@ -11,6 +11,7 @@ const productSchema = new mongoose.Schema({
     productCollection: { type: String, default: "None" },
     sizes: { type: Array, required: true },
     bestseller: { type: Boolean },
+    colors: { type: Array, default: [] },
     date: { type: Number, required: true },
     reviews: [{
         userId: { type: String, required: true },

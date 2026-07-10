@@ -13,6 +13,7 @@ const Product = () => {
   const [productData, setProductData] = useState(false);
   const [image, setImage] = useState('')
   const [size,setSize] = useState('')
+  const [selectedColor, setSelectedColor] = useState('')
   const [activeTab, setActiveTab] = useState('description')
   
   const [rating, setRating] = useState(5)
@@ -22,7 +23,12 @@ const Product = () => {
     products.map((item) => {
       if (item._id === productId) {
         setProductData(item)
-        setImage(item.image[0])
+        if (item.colors && item.colors.length > 0) {
+            setSelectedColor(item.colors[0].colorName)
+            setImage(item.colors[0].images[0])
+        } else {
+            setImage(item.image[0])
+        }
         return null;
       }
     })
@@ -73,6 +79,10 @@ const Product = () => {
       averageRating = Math.round(sum / reviewsCount);
   }
 
+  const currentImages = (productData.colors && productData.colors.length > 0 && selectedColor)
+     ? productData.colors.find(c => c.colorName === selectedColor)?.images || productData.image
+     : productData.image;
+
   return productData ? (
     <div className='border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100'>
       {/*----------- Product Data-------------- */}
@@ -82,13 +92,13 @@ const Product = () => {
         <div className='flex-1 flex flex-col-reverse gap-3 sm:flex-row'>
           <div className='flex sm:flex-col overflow-x-auto sm:overflow-y-scroll justify-between sm:justify-normal sm:w-[18.7%] w-full'>
               {
-                productData.image.map((item,index)=>(
-                  <img onClick={()=>setImage(item)} src={item} key={index} className='w-[24%] sm:w-full sm:mb-3 flex-shrink-0 cursor-pointer' alt="" />
+                currentImages.map((item,index)=>(
+                  item && <img onClick={()=>setImage(item)} src={item} key={index} className='w-[24%] sm:w-full sm:mb-3 flex-shrink-0 cursor-pointer object-cover' alt="" />
                 ))
               }
           </div>
           <div className='w-full sm:w-[80%]'>
-              <img className='w-full h-auto' src={image} alt="" />
+              {image && <img className='w-full h-auto object-cover' src={image} alt="" />}
           </div>
         </div>
 
@@ -106,15 +116,33 @@ const Product = () => {
               <p className='text-3xl font-bold text-offside-black'>{currency}{productData.price}</p>
           </div>
           <p className='mt-5 text-gray-500 md:w-4/5'>{productData.description}</p>
-          <div className='flex flex-col gap-4 my-8'>
+          
+          {productData.colors && productData.colors.length > 0 && (
+              <div className='flex flex-col gap-4 mt-8'>
+                  <p>Select Color</p>
+                  <div className='flex gap-2 flex-wrap'>
+                    {productData.colors.map((c,index)=>(
+                      <button onClick={()=>{
+                          setSelectedColor(c.colorName);
+                          setImage(c.images[0]);
+                      }} className={`border py-2 px-4 bg-gray-100 ${c.colorName === selectedColor ? 'border-orange-500' : ''}`} key={index}>{c.colorName}</button>
+                    ))}
+                  </div>
+              </div>
+          )}
+
+          <div className={`flex flex-col gap-4 ${productData.colors && productData.colors.length > 0 ? 'my-4' : 'my-8'}`}>
               <p>Select Size</p>
-              <div className='flex gap-2'>
+              <div className='flex gap-2 flex-wrap'>
                 {productData.sizes.map((item,index)=>(
                   <button onClick={()=>setSize(item)} className={`border py-2 px-4 bg-gray-100 ${item === size ? 'border-orange-500' : ''}`} key={index}>{item}</button>
                 ))}
               </div>
           </div>
-          <button onClick={()=>addToCart(productData._id,size)} className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700'>ADD TO CART</button>
+          <button onClick={()=>{
+              const idToPass = selectedColor ? `${productData._id}_${selectedColor}` : productData._id;
+              addToCart(idToPass, size);
+          }} className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700'>ADD TO CART</button>
           <hr className='mt-8 sm:w-4/5' />
           <div className='text-sm text-gray-500 mt-5 flex flex-col gap-1'>
               <p>100% Original product.</p>

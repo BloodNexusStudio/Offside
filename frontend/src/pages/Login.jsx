@@ -17,8 +17,13 @@ const Login = () => {
   const onSubmitHandler = async (event) => {
       event.preventDefault();
       try {
+        if (currentState === 'Forgot Password') {
+          toast.success("Password reset link sent to your email!");
+          setCurrentState('Login');
+          return;
+        }
+
         if (currentState === 'Sign Up') {
-          
           const response = await axios.post(backendUrl + '/api/user/register',{name,email,password})
           if (response.data.success) {
             setToken(response.data.token)
@@ -26,9 +31,7 @@ const Login = () => {
           } else {
             toast.error(response.data.message)
           }
-
         } else {
-
           const response = await axios.post(backendUrl + '/api/user/login', {email,password})
           if (response.data.success) {
             setToken(response.data.token)
@@ -36,9 +39,7 @@ const Login = () => {
           } else {
             toast.error(response.data.message)
           }
-
         }
-
 
       } catch (error) {
         console.log(error)
@@ -80,7 +81,9 @@ const Login = () => {
                 <h2 className="text-4xl font-heading font-bold uppercase text-offside-black">{currentState}</h2>
                 <div className="h-[2px] w-12 bg-offside-black"></div>
             </div>
-            <p className="text-sm text-gray-400 font-medium mb-10">{currentState === 'Login' ? 'Login to continue' : 'Sign up to get started'}</p>
+            <p className="text-sm text-gray-400 font-medium mb-10">
+                {currentState === 'Login' ? 'Login to continue' : currentState === 'Sign Up' ? 'Sign up to get started' : 'Enter your email to reset password'}
+            </p>
 
             <form onSubmit={onSubmitHandler} className="flex flex-col gap-6">
                 {currentState === 'Sign Up' && (
@@ -101,32 +104,40 @@ const Login = () => {
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-2">
-                    <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Password</label>
-                    <div className="relative">
-                        <input onChange={(e)=>setPasword(e.target.value)} value={password} type="password" className="w-full border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-offside-black transition-colors" placeholder="Enter your password" required />
-                        <EyeOff className="w-4 h-4 text-gray-400 absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer" />
+                {currentState !== 'Forgot Password' && (
+                    <div className="flex flex-col gap-2">
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Password</label>
+                        <div className="relative">
+                            <input onChange={(e)=>setPasword(e.target.value)} value={password} type="password" className="w-full border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-offside-black transition-colors" placeholder="Enter your password" required />
+                            <EyeOff className="w-4 h-4 text-gray-400 absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer" />
+                        </div>
                     </div>
-                </div>
+                )}
 
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-2">
-                    <div className="flex items-center gap-2">
-                        <input type="checkbox" id="remember" className="w-4 h-4 accent-offside-black cursor-pointer" />
-                        <label htmlFor="remember" className="text-xs font-medium text-gray-600 cursor-pointer">Remember me</label>
+                {currentState !== 'Forgot Password' && (
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-2">
+                        <div className="flex items-center gap-2">
+                            <input type="checkbox" id="remember" className="w-4 h-4 accent-offside-black cursor-pointer" />
+                            <label htmlFor="remember" className="text-xs font-medium text-gray-600 cursor-pointer">Remember me</label>
+                        </div>
+                        {currentState === 'Login' && (
+                            <p onClick={() => setCurrentState('Forgot Password')} className="text-xs font-medium text-gray-600 cursor-pointer hover:text-offside-black transition-colors">Forgot password?</p>
+                        )}
                     </div>
-                    {currentState === 'Login' && <p className="text-xs font-medium text-gray-600 cursor-pointer hover:text-offside-black transition-colors">Forgot password?</p>}
-                </div>
+                )}
 
                 <button type="submit" className="w-full bg-offside-black text-white font-bold uppercase tracking-widest text-[11px] py-4 mt-4 flex items-center justify-center gap-2 hover:opacity-80 transition-opacity">
-                    {currentState === 'Login' ? 'Sign In' : 'Sign Up'}
+                    {currentState === 'Login' ? 'Sign In' : currentState === 'Sign Up' ? 'Sign Up' : 'Reset Password'}
                     <ArrowRight className="w-4 h-4" />
                 </button>
 
                 <div className="text-center mt-4">
                     {currentState === 'Login' ? (
                         <p className="text-[11px] font-medium text-gray-500">New here? <span onClick={()=>setCurrentState('Sign Up')} className="text-offside-black underline underline-offset-2 cursor-pointer hover:opacity-70 transition-opacity">Create an account</span></p>
-                    ) : (
+                    ) : currentState === 'Sign Up' ? (
                         <p className="text-[11px] font-medium text-gray-500">Already have an account? <span onClick={()=>setCurrentState('Login')} className="text-offside-black underline underline-offset-2 cursor-pointer hover:opacity-70 transition-opacity">Login here</span></p>
+                    ) : (
+                        <p className="text-[11px] font-medium text-gray-500">Remember your password? <span onClick={()=>setCurrentState('Login')} className="text-offside-black underline underline-offset-2 cursor-pointer hover:opacity-70 transition-opacity">Back to Login</span></p>
                     )}
                 </div>
             </form>

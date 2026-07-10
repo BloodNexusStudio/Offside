@@ -6,10 +6,9 @@ import { toast } from 'react-toastify'
 
 const Add = ({token}) => {
 
-  const [image1,setImage1] = useState(false)
-  const [image2,setImage2] = useState(false)
-  const [image3,setImage3] = useState(false)
-  const [image4,setImage4] = useState(false)
+   const [colors, setColors] = useState([
+     { name: 'Default', images: [null, null, null, null] }
+   ]);
 
    const [name, setName] = useState("");
    const [description, setDescription] = useState("");
@@ -20,6 +19,27 @@ const Add = ({token}) => {
    const [productCollection, setProductCollection] = useState("None");
    const [bestseller, setBestseller] = useState(false);
    const [sizes, setSizes] = useState([]);
+
+   const handleColorImageChange = (colorIndex, imageIndex, file) => {
+      const newColors = [...colors];
+      newColors[colorIndex].images[imageIndex] = file;
+      setColors(newColors);
+   };
+
+   const handleColorNameChange = (colorIndex, newName) => {
+      const newColors = [...colors];
+      newColors[colorIndex].name = newName;
+      setColors(newColors);
+   };
+
+   const addColorBlock = () => {
+      setColors([...colors, { name: '', images: [null, null, null, null] }]);
+   };
+
+   const removeColorBlock = (index) => {
+      const newColors = colors.filter((_, i) => i !== index);
+      setColors(newColors);
+   };
 
    const onSubmitHandler = async (e) => {
     e.preventDefault();
@@ -38,10 +58,26 @@ const Add = ({token}) => {
       formData.append("bestseller",bestseller)
       formData.append("sizes",JSON.stringify(sizes))
 
-      image1 && formData.append("image1",image1)
-      image2 && formData.append("image2",image2)
-      image3 && formData.append("image3",image3)
-      image4 && formData.append("image4",image4)
+      // Append Color Data
+      const colorNames = colors.map(c => c.name);
+      formData.append("colorsData", JSON.stringify(colorNames));
+
+      // Append images for each color
+      colors.forEach((color, colorIdx) => {
+         color.images.forEach((img, imgIdx) => {
+            if (img) {
+               formData.append(`image_${color.name}_${imgIdx}`, img);
+            }
+         });
+      });
+
+      // Also append generic image1..image4 for backward compatibility if no colors named
+      if (colors.length > 0) {
+         if (colors[0].images[0]) formData.append("image1", colors[0].images[0]);
+         if (colors[0].images[1]) formData.append("image2", colors[0].images[1]);
+         if (colors[0].images[2]) formData.append("image3", colors[0].images[2]);
+         if (colors[0].images[3]) formData.append("image4", colors[0].images[3]);
+      }
 
       const response = await axios.post(backendUrl + "/api/product/add",formData,{headers:{token}})
 
@@ -49,10 +85,7 @@ const Add = ({token}) => {
         toast.success(response.data.message)
         setName('')
         setDescription('')
-        setImage1(false)
-        setImage2(false)
-        setImage3(false)
-        setImage4(false)
+        setColors([{ name: 'Default', images: [null, null, null, null] }])
         setPrice('')
         setMainPrice('')
       } else {
@@ -66,29 +99,43 @@ const Add = ({token}) => {
    }
 
   return (
-    <form onSubmit={onSubmitHandler} className='flex flex-col w-full items-start gap-3'>
-        <div>
-          <p className='mb-2'>Upload Image</p>
-
-          <div className='flex gap-2'>
-            <label htmlFor="image1">
-              <img className='w-20' src={!image1 ? assets.upload_area : URL.createObjectURL(image1)} alt="" />
-              <input onChange={(e)=>setImage1(e.target.files[0])} type="file" id="image1" hidden/>
-            </label>
-            <label htmlFor="image2">
-              <img className='w-20' src={!image2 ? assets.upload_area : URL.createObjectURL(image2)} alt="" />
-              <input onChange={(e)=>setImage2(e.target.files[0])} type="file" id="image2" hidden/>
-            </label>
-            <label htmlFor="image3">
-              <img className='w-20' src={!image3 ? assets.upload_area : URL.createObjectURL(image3)} alt="" />
-              <input onChange={(e)=>setImage3(e.target.files[0])} type="file" id="image3" hidden/>
-            </label>
-            <label htmlFor="image4">
-              <img className='w-20' src={!image4 ? assets.upload_area : URL.createObjectURL(image4)} alt="" />
-              <input onChange={(e)=>setImage4(e.target.files[0])} type="file" id="image4" hidden/>
-            </label>
-          </div>
+    <form onSubmit={onSubmitHandler} className='flex flex-col w-full items-start gap-5'>
+        
+        <div className="w-full">
+            <h3 className="text-lg font-bold mb-4">Product Variants (Colors)</h3>
+            <div className="flex flex-col gap-6">
+                {colors.map((color, colorIdx) => (
+                    <div key={colorIdx} className="border border-gray-200 p-4 rounded bg-white">
+                        <div className="flex items-center justify-between mb-4">
+                            <input 
+                                type="text" 
+                                value={color.name} 
+                                onChange={(e) => handleColorNameChange(colorIdx, e.target.value)}
+                                placeholder="Color Name (e.g., Black, White)"
+                                className="px-3 py-2 border border-gray-300 min-w-[200px]"
+                                required
+                            />
+                            {colors.length > 1 && (
+                                <button type="button" onClick={() => removeColorBlock(colorIdx)} className="text-red-500 text-sm font-bold">Remove</button>
+                            )}
+                        </div>
+                        <div className='flex gap-2'>
+                            {[0, 1, 2, 3].map((imgIdx) => (
+                                <label key={imgIdx} htmlFor={`image_${colorIdx}_${imgIdx}`}>
+                                    <img className='w-20 object-cover rounded cursor-pointer border border-gray-100' src={!color.images[imgIdx] ? assets.upload_area : URL.createObjectURL(color.images[imgIdx])} alt="" />
+                                    <input onChange={(e)=>handleColorImageChange(colorIdx, imgIdx, e.target.files[0])} type="file" id={`image_${colorIdx}_${imgIdx}`} hidden/>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+            <button type="button" onClick={addColorBlock} className="mt-4 border border-black text-black px-4 py-2 text-sm font-medium hover:bg-gray-50 transition-colors">
+                + Add Another Color
+            </button>
         </div>
+
+        <div className="w-full h-[1px] bg-gray-200 my-2"></div>
 
         <div className='w-full'>
           <p className='mb-2'>Product name</p>
@@ -139,7 +186,7 @@ const Add = ({token}) => {
 
         <div>
           <p className='mb-2'>Product Sizes</p>
-          <div className='flex gap-3'>
+          <div className='flex gap-3 flex-wrap'>
             <div onClick={()=>setSizes(prev => prev.includes("S") ? prev.filter( item => item !== "S") : [...prev,"S"])}>
               <p className={`${sizes.includes("S") ? "bg-pink-100" : "bg-slate-200" } px-3 py-1 cursor-pointer`}>S</p>
             </div>

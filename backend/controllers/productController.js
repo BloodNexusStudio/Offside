@@ -6,21 +6,54 @@ import userModel from "../models/userModel.js"
 const addProduct = async (req, res) => {
     try {
 
-        const { name, description, price, mainPrice, category, subCategory, productCollection, sizes, bestseller } = req.body
+        const { name, description, price, mainPrice, category, subCategory, productCollection, sizes, bestseller, colorsData } = req.body
 
-        const image1 = req.files.image1 && req.files.image1[0]
-        const image2 = req.files.image2 && req.files.image2[0]
-        const image3 = req.files.image3 && req.files.image3[0]
-        const image4 = req.files.image4 && req.files.image4[0]
+        let parsedColorsData = [];
+        if (colorsData) {
+            parsedColorsData = JSON.parse(colorsData);
+        }
 
-        const images = [image1, image2, image3, image4].filter((item) => item !== undefined)
+        let globalImagesUrl = [];
+        let finalColors = [];
 
-        let imagesUrl = await Promise.all(
-            images.map(async (item) => {
-                let result = await cloudinary.uploader.upload(item.path, { resource_type: 'image' });
-                return result.secure_url
-            })
-        )
+        if (parsedColorsData.length > 0) {
+            for (let i = 0; i < parsedColorsData.length; i++) {
+                const colorName = parsedColorsData[i];
+                // Find all files matching this color: image_{colorName}_{index}
+                const colorFiles = req.files.filter(file => file.fieldname.startsWith(`image_${colorName}_`));
+                
+                let colorImagesUrl = await Promise.all(
+                    colorFiles.map(async (item) => {
+                        let result = await cloudinary.uploader.upload(item.path, { resource_type: 'image' });
+                        return result.secure_url;
+                    })
+                );
+
+                finalColors.push({
+                    colorName,
+                    images: colorImagesUrl
+                });
+
+                if (i === 0) {
+                    globalImagesUrl = colorImagesUrl; // First color acts as the global image
+                }
+            }
+        } else {
+            // Backward compatibility for forms without colors
+            const image1 = req.files.find(f => f.fieldname === 'image1');
+            const image2 = req.files.find(f => f.fieldname === 'image2');
+            const image3 = req.files.find(f => f.fieldname === 'image3');
+            const image4 = req.files.find(f => f.fieldname === 'image4');
+
+            const images = [image1, image2, image3, image4].filter((item) => item !== undefined)
+
+            globalImagesUrl = await Promise.all(
+                images.map(async (item) => {
+                    let result = await cloudinary.uploader.upload(item.path, { resource_type: 'image' });
+                    return result.secure_url
+                })
+            )
+        }
 
         const productData = {
             name,
@@ -32,11 +65,12 @@ const addProduct = async (req, res) => {
             productCollection: productCollection || "None",
             bestseller: bestseller === "true" ? true : false,
             sizes: JSON.parse(sizes),
-            image: imagesUrl,
+            image: globalImagesUrl,
+            colors: finalColors,
             date: Date.now()
         }
 
-        console.log(productData);
+        console.log("Saving product data:", productData);
 
         const product = new productModel(productData);
         await product.save()
