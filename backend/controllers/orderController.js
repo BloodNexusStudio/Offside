@@ -37,7 +37,9 @@ const placeOrder = async (req,res) => {
         await newOrder.save()
         sendInvoice(newOrder) // send email invoice asynchronously
 
-        await userModel.findByIdAndUpdate(userId,{cartData:{}})
+        if (!userId.startsWith('guest_')) {
+            await userModel.findByIdAndUpdate(userId,{cartData:{}})
+        }
 
         res.json({success:true,message:"Order Placed"})
 
@@ -115,7 +117,9 @@ const verifyStripe = async (req,res) => {
         if (success === "true") {
             const order = await orderModel.findByIdAndUpdate(orderId, {payment:true}, {new: true});
             sendInvoice(order);
-            await userModel.findByIdAndUpdate(userId, {cartData: {}})
+            if (!userId.startsWith('guest_')) {
+                await userModel.findByIdAndUpdate(userId, {cartData: {}})
+            }
             res.json({success: true});
         } else {
             await orderModel.findByIdAndDelete(orderId)
@@ -177,7 +181,9 @@ const verifyRazorpay = async (req,res) => {
         if (orderInfo.status === 'paid') {
             const order = await orderModel.findByIdAndUpdate(orderInfo.receipt,{payment:true}, {new: true});
             sendInvoice(order);
-            await userModel.findByIdAndUpdate(userId,{cartData:{}})
+            if (!userId.startsWith('guest_')) {
+                await userModel.findByIdAndUpdate(userId,{cartData:{}})
+            }
             res.json({ success: true, message: "Payment Successful" })
         } else {
              res.json({ success: false, message: 'Payment Failed' });

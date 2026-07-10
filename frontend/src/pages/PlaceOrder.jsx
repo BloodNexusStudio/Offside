@@ -80,8 +80,14 @@ const PlaceOrder = () => {
                     
                     const { data } = await axios.post(backendUrl + '/api/order/verifyRazorpay',response,{headers:{token}})
                     if (data.success) {
-                        navigate('/orders')
                         setCartItems({})
+                        if (!token) {
+                            localStorage.removeItem('guestCart');
+                            toast.success("Order placed successfully!");
+                            navigate('/');
+                        } else {
+                            navigate('/orders');
+                        }
                     }
                 } catch (error) {
                     console.log(error)
@@ -149,7 +155,13 @@ const PlaceOrder = () => {
                     const response = await axios.post(backendUrl + '/api/order/place',orderData,{headers:{token}})
                     if (response.data.success) {
                         setCartItems({})
-                        navigate('/orders')
+                        if (!token) {
+                            localStorage.removeItem('guestCart');
+                            toast.success("Order placed successfully!");
+                            navigate('/');
+                        } else {
+                            navigate('/orders');
+                        }
                     } else {
                         toast.error(response.data.message)
                     }
