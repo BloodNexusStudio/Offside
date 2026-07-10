@@ -28,6 +28,7 @@ const Orders = () => {
             item['payment'] = order.payment
             item['paymentMethod'] = order.paymentMethod
             item['date'] = order.date
+            item['deliveryDate'] = order.deliveryDate
             item['orderId'] = order._id // keep track of the parent order
             allOrdersItem.push(item)
           })
@@ -179,9 +180,9 @@ const Orders = () => {
                                     <span>{trackingId === index ? 'HIDE TRACKING' : 'TRACK ORDER'}</span>
                                     <span>&rarr;</span>
                                 </button>
-                                {(item.status === 'Order Placed' || item.status === 'Packing') && (
+                                {((item.status === 'Order Placed' || item.status === 'Packing') || (item.status === 'Delivered' && item.deliveryDate && (Date.now() - item.deliveryDate <= 48 * 60 * 60 * 1000))) && (
                                     <button onClick={() => handleOpenReplace(index, item.size)} className='w-full md:max-w-[200px] border border-gray-300 text-offside-black text-xs sm:text-sm font-bold uppercase tracking-widest py-3 hover:bg-gray-50 transition-colors'>
-                                        {replaceId === index ? 'CANCEL REPLACE' : 'REPLACE SIZE'}
+                                        {replaceId === index ? 'CANCEL EXCHANGE' : 'EXCHANGE SIZE'}
                                     </button>
                                 )}
                             </div>
@@ -268,8 +269,8 @@ const Orders = () => {
             <div className='flex items-center justify-center sm:justify-start gap-5'>
                 <RefreshCcw size={36} strokeWidth={1} className='text-offside-black' />
                 <div>
-                    <div className='font-bold text-sm text-offside-black tracking-wide mb-1'>EASY RETURNS</div>
-                    <div className='text-sm text-gray-500'>Hassle-free returns</div>
+                    <div className='font-bold text-sm text-offside-black tracking-wide mb-1'>EASY EXCHANGE</div>
+                    <div className='text-sm text-gray-500'>Hassle-free size exchange</div>
                 </div>
             </div>
             <div className='flex items-center justify-center sm:justify-start gap-5'>

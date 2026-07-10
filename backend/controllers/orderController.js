@@ -237,7 +237,12 @@ const updateStatus = async (req,res) => {
         
         const { orderId, status } = req.body
 
-        await orderModel.findByIdAndUpdate(orderId, { status })
+        const updateData = { status }
+        if (status === 'Delivered') {
+            updateData.deliveryDate = Date.now()
+        }
+
+        await orderModel.findByIdAndUpdate(orderId, updateData)
         res.json({success:true,message:'Status Updated'})
 
     } catch (error) {
@@ -259,8 +264,14 @@ const replaceOrderItem = async (req, res) => {
         if (order.userId !== userId) {
             return res.json({ success: false, message: "Not authorized" });
         }
-        if (order.status !== 'Order Placed' && order.status !== 'Packing') {
-            return res.json({ success: false, message: "Cannot replace items after shipping" });
+        if (order.status !== 'Order Placed' && order.status !== 'Packing' && order.status !== 'Delivered') {
+            return res.json({ success: false, message: "Cannot exchange items while in transit" });
+        }
+        
+        if (order.status === 'Delivered') {
+            if (!order.deliveryDate || (Date.now() - order.deliveryDate > 48 * 60 * 60 * 1000)) {
+                return res.json({ success: false, message: "Exchange window has expired" });
+            }
         }
 
         let itemFound = false;
