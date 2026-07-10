@@ -9,26 +9,29 @@ const Collection = () => {
   const { products , search , showSearch } = useContext(ShopContext);
   const [showFilter,setShowFilter] = useState(false);
   const [filterProducts,setFilterProducts] = useState([]);
-  const [category,setCategory] = useState([]);
-  const [subCategory,setSubCategory] = useState([]);
+  const [collectionFilter,setCollectionFilter] = useState([]);
   const [sizeFilter,setSizeFilter] = useState([]);
   const [sortType,setSortType] = useState('relavent')
+  const [allCollections, setAllCollections] = useState([]);
 
-  const toggleCategory = (e) => {
-    if (category.includes(e.target.value)) {
-        setCategory(prev=> prev.filter(item => item !== e.target.value))
+  useEffect(() => {
+     if (products && products.length > 0) {
+        const collections = new Set();
+        products.forEach(p => {
+            if (p.productCollection && p.productCollection !== "None") {
+                collections.add(p.productCollection);
+            }
+        });
+        setAllCollections(Array.from(collections));
+     }
+  }, [products]);
+
+  const toggleCollection = (e) => {
+    if (collectionFilter.includes(e.target.value)) {
+        setCollectionFilter(prev=> prev.filter(item => item !== e.target.value))
     }
     else{
-      setCategory(prev => [...prev,e.target.value])
-    }
-  }
-
-  const toggleSubCategory = (e) => {
-    if (subCategory.includes(e.target.value)) {
-      setSubCategory(prev=> prev.filter(item => item !== e.target.value))
-    }
-    else{
-      setSubCategory(prev => [...prev,e.target.value])
+      setCollectionFilter(prev => [...prev,e.target.value])
     }
   }
 
@@ -42,8 +45,7 @@ const Collection = () => {
   }
 
   const clearAllFilters = () => {
-    setCategory([]);
-    setSubCategory([]);
+    setCollectionFilter([]);
     setSizeFilter([]);
   }
 
@@ -54,12 +56,8 @@ const Collection = () => {
       productsCopy = productsCopy.filter(item => item.name.toLowerCase().includes(search.toLowerCase()))
     }
 
-    if (category.length > 0) {
-      productsCopy = productsCopy.filter(item => category.includes(item.category));
-    }
-
-    if (subCategory.length > 0 ) {
-      productsCopy = productsCopy.filter(item => subCategory.includes(item.subCategory))
+    if (collectionFilter.length > 0) {
+      productsCopy = productsCopy.filter(item => collectionFilter.includes(item.productCollection));
     }
 
     if (sizeFilter.length > 0 ) {
@@ -88,7 +86,7 @@ const Collection = () => {
 
   useEffect(()=>{
       applyFilter();
-  },[category,subCategory,sizeFilter,search,showSearch,products])
+  },[collectionFilter,sizeFilter,search,showSearch,products])
 
   useEffect(()=>{
     sortProduct();
@@ -108,41 +106,25 @@ const Collection = () => {
             </button>
           </div>
 
-          {/* Categories */}
+          {/* Collections */}
+          {allCollections.length > 0 && (
           <div className='border-t border-gray-200 py-6'>
             <h3 className='text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-4 flex justify-between'>
-              Categories <span>—</span>
+              Collections <span>—</span>
             </h3>
             <div className='flex flex-col gap-3'>
-              {['Men', 'Women', 'Kids', 'Unisex'].map(cat => (
-                <label key={cat} className='flex items-center gap-3 cursor-pointer group'>
-                  <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${category.includes(cat) ? 'bg-offside-black border-offside-black' : 'border-gray-300 group-hover:border-gray-400'}`}>
-                    {category.includes(cat) && <span className='w-2 h-2 bg-white rounded-sm'></span>}
+              {allCollections.map(col => (
+                <label key={col} className='flex items-center gap-3 cursor-pointer group'>
+                  <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${collectionFilter.includes(col) ? 'bg-offside-black border-offside-black' : 'border-gray-300 group-hover:border-gray-400'}`}>
+                    {collectionFilter.includes(col) && <span className='w-2 h-2 bg-white rounded-sm'></span>}
                   </div>
-                  <input type="checkbox" value={cat} onChange={toggleCategory} checked={category.includes(cat)} className="hidden" />
-                  <span className='text-xs font-medium text-gray-700'>{cat}</span>
+                  <input type="checkbox" value={col} onChange={toggleCollection} checked={collectionFilter.includes(col)} className="hidden" />
+                  <span className='text-xs font-medium text-gray-700'>{col}</span>
                 </label>
               ))}
             </div>
           </div>
-
-          {/* Type */}
-          <div className='border-t border-gray-200 py-6'>
-            <h3 className='text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-4 flex justify-between'>
-              Type <span>—</span>
-            </h3>
-            <div className='flex flex-col gap-3'>
-              {['T-Shirts', 'Hoodies', 'Bottomwear', 'Jackets', 'Accessories'].map(type => (
-                <label key={type} className='flex items-center gap-3 cursor-pointer group'>
-                  <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${subCategory.includes(type) ? 'bg-offside-black border-offside-black' : 'border-gray-300 group-hover:border-gray-400'}`}>
-                    {subCategory.includes(type) && <span className='w-2 h-2 bg-white rounded-sm'></span>}
-                  </div>
-                  <input type="checkbox" value={type} onChange={toggleSubCategory} checked={subCategory.includes(type)} className="hidden" />
-                  <span className='text-xs font-medium text-gray-700'>{type}</span>
-                </label>
-              ))}
-            </div>
-          </div>
+          )}
 
           {/* Size */}
           <div className='border-t border-gray-200 py-6'>
