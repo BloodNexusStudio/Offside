@@ -17,6 +17,7 @@ const Add = ({token}) => {
    const [category, setCategory] = useState("Men");
    const [subCategory, setSubCategory] = useState("Topwear");
    const [productCollection, setProductCollection] = useState("None");
+   const [fit, setFit] = useState("Regular Fit");
    const [bestseller, setBestseller] = useState(false);
    const [sizes, setSizes] = useState([]);
 
@@ -55,6 +56,7 @@ const Add = ({token}) => {
       formData.append("category",category)
       formData.append("subCategory",subCategory)
       formData.append("productCollection",productCollection)
+      formData.append("fit",fit)
       formData.append("bestseller",bestseller)
       formData.append("sizes",JSON.stringify(sizes))
 
@@ -170,6 +172,15 @@ const Add = ({token}) => {
             <div>
               <p className='mb-2'>Collection (Optional)</p>
               <input onChange={(e) => setProductCollection(e.target.value)} value={productCollection} className='w-full px-3 py-2 sm:w-[150px]' type="text" placeholder='e.g. FIFA' />
+            </div>
+
+            <div>
+              <p className='mb-2'>Fit</p>
+              <select onChange={(e) => setFit(e.target.value)} value={fit} className='w-full px-3 py-2'>
+                  <option value="Regular Fit">Regular Fit</option>
+                  <option value="Oversized Fit">Oversized Fit</option>
+                  <option value="Slim Fit">Slim Fit</option>
+              </select>
             </div>
 
             <div>

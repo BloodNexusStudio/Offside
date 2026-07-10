@@ -6,7 +6,7 @@ import userModel from "../models/userModel.js"
 const addProduct = async (req, res) => {
     try {
 
-        const { name, description, price, mainPrice, category, subCategory, productCollection, sizes, bestseller, colorsData } = req.body
+        const { name, description, price, mainPrice, category, subCategory, productCollection, sizes, bestseller, colorsData, fit } = req.body
 
         let parsedColorsData = [];
         if (colorsData) {
@@ -64,6 +64,7 @@ const addProduct = async (req, res) => {
             subCategory,
             productCollection: productCollection || "None",
             bestseller: bestseller === "true" ? true : false,
+            fit: fit || "Regular Fit",
             sizes: JSON.parse(sizes),
             image: globalImagesUrl,
             colors: finalColors,

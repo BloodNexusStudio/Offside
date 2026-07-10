@@ -105,6 +105,9 @@ const Product = () => {
         {/* -------- Product Info ---------- */}
         <div className='flex-1'>
           <h1 className='font-medium text-2xl mt-2'>{productData.name}</h1>
+          {productData.fit && (
+              <p className='text-xs font-bold uppercase tracking-widest text-gray-500 mt-1'>{productData.fit}</p>
+          )}
           <div className='flex items-center gap-1 mt-2'>
               {[...Array(5)].map((_, i) => (
                   <img key={i} src={i < averageRating ? assets.star_icon : assets.star_dull_icon} alt="" className="w-3 5" />
