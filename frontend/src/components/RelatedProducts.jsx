@@ -3,7 +3,7 @@ import { ShopContext } from '../context/ShopContext'
 import Title from './Title';
 import ProductItem from './ProductItem';
 
-const RelatedProducts = ({category,subCategory}) => {
+const RelatedProducts = ({currentId, category, subCategory, productCollection}) => {
 
     const { products } = useContext(ShopContext);
     const [related,setRelated] = useState([]);
@@ -14,13 +14,24 @@ const RelatedProducts = ({category,subCategory}) => {
             
             let productsCopy = products.slice();
             
-            productsCopy = productsCopy.filter((item) => category === item.category);
-            productsCopy = productsCopy.filter((item) => subCategory === item.subCategory);
+            // Exclude the current product
+            if (currentId) {
+                productsCopy = productsCopy.filter((item) => item._id !== currentId);
+            }
+
+            // Filter by collection if it exists and isn't "None"
+            if (productCollection && productCollection !== "None") {
+                 productsCopy = productsCopy.filter((item) => item.productCollection === productCollection);
+            } else {
+                 // Fallback to standard category matching
+                 if (category) productsCopy = productsCopy.filter((item) => category === item.category);
+                 if (subCategory) productsCopy = productsCopy.filter((item) => subCategory === item.subCategory);
+            }
 
             setRelated(productsCopy.slice(0,5));
         }
         
-    },[products])
+    },[products, currentId, category, subCategory, productCollection])
 
   return (
     <div className='my-24'>
