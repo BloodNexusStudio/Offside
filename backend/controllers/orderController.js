@@ -195,7 +195,12 @@ const allOrders = async (req,res) => {
 
     try {
         
-        const orders = await orderModel.find({})
+        const orders = await orderModel.find({
+            $or: [
+                { payment: true },
+                { paymentMethod: "COD" }
+            ]
+        })
         res.json({success:true,orders})
 
     } catch (error) {
@@ -211,7 +216,13 @@ const userOrders = async (req,res) => {
         
         const { userId } = req.body
 
-        const orders = await orderModel.find({ userId })
+        const orders = await orderModel.find({ 
+            userId,
+            $or: [
+                { payment: true },
+                { paymentMethod: "COD" }
+            ]
+        })
         res.json({success:true,orders})
 
     } catch (error) {
