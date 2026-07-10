@@ -72,33 +72,4 @@ const getUserCart = async (req,res) => {
 
 }
 
-// sync guest cart
-const syncCart = async (req,res) => {
-    try {
-        const { userId, cartData } = req.body
-        const userData = await userModel.findById(userId)
-        let userCartData = await userData.cartData;
-
-        for (const itemId in cartData) {
-            for (const size in cartData[itemId]) {
-                if (userCartData[itemId]) {
-                    if (userCartData[itemId][size]) {
-                        userCartData[itemId][size] += cartData[itemId][size];
-                    } else {
-                        userCartData[itemId][size] = cartData[itemId][size];
-                    }
-                } else {
-                    userCartData[itemId] = {};
-                    userCartData[itemId][size] = cartData[itemId][size];
-                }
-            }
-        }
-        await userModel.findByIdAndUpdate(userId, {cartData: userCartData})
-        res.json({ success: true, message: "Cart Synced" })
-    } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
-    }
-}
-
-export { addToCart, updateCart, getUserCart, syncCart }
+export { addToCart, updateCart, getUserCart }

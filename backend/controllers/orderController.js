@@ -36,7 +36,6 @@ const placeOrder = async (req,res) => {
         const newOrder = new orderModel(orderData)
         await newOrder.save()
         sendInvoice(newOrder) // send email invoice asynchronously
-
         if (!userId.startsWith('guest_')) {
             await userModel.findByIdAndUpdate(userId,{cartData:{}})
         }

@@ -28,12 +28,6 @@ const Login = () => {
           if (response.data.success) {
             setToken(response.data.token)
             localStorage.setItem('token',response.data.token)
-            
-            const guestCart = JSON.parse(localStorage.getItem('guestCart') || '{}');
-            if (Object.keys(guestCart).length > 0) {
-                await axios.post(backendUrl + '/api/cart/sync', { cartData: guestCart }, { headers: { token: response.data.token } });
-                localStorage.removeItem('guestCart');
-            }
           } else {
             toast.error(response.data.message)
           }
@@ -42,12 +36,6 @@ const Login = () => {
           if (response.data.success) {
             setToken(response.data.token)
             localStorage.setItem('token',response.data.token)
-            
-            const guestCart = JSON.parse(localStorage.getItem('guestCart') || '{}');
-            if (Object.keys(guestCart).length > 0) {
-                await axios.post(backendUrl + '/api/cart/sync', { cartData: guestCart }, { headers: { token: response.data.token } });
-                localStorage.removeItem('guestCart');
-            }
           } else {
             toast.error(response.data.message)
           }

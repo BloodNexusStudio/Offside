@@ -17,19 +17,15 @@ const Verify = () => {
     const verifyPayment = async () => {
         try {
 
-
+            if (!token) {
+                return null
+            }
 
             const response = await axios.post(backendUrl + '/api/order/verifyStripe', { success, orderId }, { headers: { token } })
 
             if (response.data.success) {
                 setCartItems({})
-                if (!token) {
-                    localStorage.removeItem('guestCart');
-                    toast.success("Order placed successfully!");
-                    navigate('/');
-                } else {
-                    navigate('/orders');
-                }
+                navigate('/orders')
             } else {
                 navigate('/cart')
             }
@@ -42,7 +38,7 @@ const Verify = () => {
 
     useEffect(() => {
         verifyPayment()
-    }, [])
+    }, [token])
 
     return (
         <div>
