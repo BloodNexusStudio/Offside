@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Menu, Bell, CalendarDays, ChevronDown, LogOut } from 'lucide-react'
 import { useLocation } from 'react-router-dom'
 
-const Navbar = ({ setToken }) => {
+const Navbar = ({ setToken, setIsSidebarOpen }) => {
   const location = useLocation();
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -23,10 +23,10 @@ const Navbar = ({ setToken }) => {
   const formatDate = (date) => date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 sm:gap-x-6 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 sm:gap-x-6 sm:px-6 lg:px-8 shadow-sm">
         
         {/* Mobile menu button placeholder */}
-        <button type="button" className="-m-2.5 p-2.5 text-gray-700 lg:hidden">
+        <button onClick={() => setIsSidebarOpen(true)} type="button" className="-m-2.5 p-2.5 text-gray-700 lg:hidden">
             <span className="sr-only">Open sidebar</span>
             <Menu className="h-6 w-6" aria-hidden="true" />
         </button>

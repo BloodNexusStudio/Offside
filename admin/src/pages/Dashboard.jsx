@@ -86,49 +86,57 @@ const Dashboard = ({ token }) => {
     <div className="flex flex-col gap-8">
       
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-bold tracking-wider text-gray-500 uppercase">Total Revenue</p>
-            <Wallet className="h-5 w-5 text-gray-400" />
+            <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">Total Revenue</p>
+            <div className="p-2 bg-gray-50 rounded-lg border border-gray-100">
+              <Wallet className="h-5 w-5 text-gray-600" />
+            </div>
           </div>
-          <p className="mt-4 text-3xl font-bold text-gray-900">{currency}{totalRevenue.toLocaleString()}</p>
-          <p className="mt-1 text-sm text-green-600 flex items-center"><ArrowUpRight className="h-4 w-4 mr-1"/> 12% from last month</p>
+          <p className="mt-4 text-3xl font-black text-gray-900 tracking-tight">{currency}{totalRevenue.toLocaleString()}</p>
+          <p className="mt-2 text-sm font-semibold text-green-600 flex items-center"><ArrowUpRight className="h-4 w-4 mr-1"/> 12% from last month</p>
         </div>
 
-        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-bold tracking-wider text-gray-500 uppercase">Total Orders</p>
-            <ShoppingCart className="h-5 w-5 text-gray-400" />
+            <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">Total Orders</p>
+            <div className="p-2 bg-gray-50 rounded-lg border border-gray-100">
+              <ShoppingCart className="h-5 w-5 text-gray-600" />
+            </div>
           </div>
-          <p className="mt-4 text-3xl font-bold text-gray-900">{totalOrders}</p>
-          <p className="mt-1 text-sm text-green-600 flex items-center"><ArrowUpRight className="h-4 w-4 mr-1"/> 8% from last month</p>
+          <p className="mt-4 text-3xl font-black text-gray-900 tracking-tight">{totalOrders}</p>
+          <p className="mt-2 text-sm font-semibold text-green-600 flex items-center"><ArrowUpRight className="h-4 w-4 mr-1"/> 8% from last month</p>
         </div>
 
-        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-bold tracking-wider text-gray-500 uppercase">Total Customers</p>
-            <Users className="h-5 w-5 text-gray-400" />
+            <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">Total Customers</p>
+            <div className="p-2 bg-gray-50 rounded-lg border border-gray-100">
+              <Users className="h-5 w-5 text-gray-600" />
+            </div>
           </div>
-          <p className="mt-4 text-3xl font-bold text-gray-900">{uniqueCustomers}</p>
-          <p className="mt-1 text-sm text-gray-500 flex items-center">— 0% from last month</p>
+          <p className="mt-4 text-3xl font-black text-gray-900 tracking-tight">{uniqueCustomers}</p>
+          <p className="mt-2 text-sm font-medium text-gray-400 flex items-center">— 0% from last month</p>
         </div>
 
-        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-bold tracking-wider text-gray-500 uppercase">Total Products</p>
-            <PackageSearch className="h-5 w-5 text-gray-400" />
+            <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">Total Products</p>
+            <div className="p-2 bg-gray-50 rounded-lg border border-gray-100">
+              <PackageSearch className="h-5 w-5 text-gray-600" />
+            </div>
           </div>
-          <p className="mt-4 text-3xl font-bold text-gray-900">{totalProducts}</p>
-          <p className="mt-1 text-sm text-gray-500 flex items-center">— 0% from last month</p>
+          <p className="mt-4 text-3xl font-black text-gray-900 tracking-tight">{totalProducts}</p>
+          <p className="mt-2 text-sm font-medium text-gray-400 flex items-center">— 0% from last month</p>
         </div>
       </div>
 
       {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Line Chart */}
-        <div className="lg:col-span-2 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="lg:col-span-2 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-base font-bold text-gray-900">Sales Overview</h2>
             <select className="text-sm border-gray-300 rounded-md shadow-sm focus:border-offside-black focus:ring-offside-black">
