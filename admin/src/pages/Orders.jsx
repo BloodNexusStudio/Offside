@@ -50,40 +50,38 @@ const Orders = ({ token }) => {
 
   return (
     <div>
-      <h3>Order Page</h3>
-      <div className='flex flex-col gap-4 mt-6'>
+      <h3 className="text-sm font-bold uppercase tracking-wider text-white mb-6">Order Management</h3>
+      <div>
         {
           orders.map((order, index) => (
-            <div className='grid grid-cols-1 md:grid-cols-[auto_1fr_auto_auto_auto] gap-6 items-center bg-white rounded-xl border border-gray-100 shadow-sm p-6 hover:shadow-md transition-shadow text-sm text-gray-700' key={index}>
-              <div className="hidden md:flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gray-50 border border-gray-100">
-                <img className='w-6' src={assets.parcel_icon} alt="" />
-              </div>
-              <div className="space-y-3">
-                <div className="font-medium text-gray-900">
-                  {order.items.map((item, idx) => (
-                    <span key={idx}>
-                      {item.name} x {item.quantity} <span className="text-gray-500 text-xs">({item.size})</span>
-                      {idx !== order.items.length - 1 && ', '}
-                    </span>
-                  ))}
+            <div className='grid grid-cols-1 sm:grid-cols-[0.5fr_2fr_1fr] lg:grid-cols-[0.5fr_2fr_1fr_1fr_1fr] gap-4 items-start border border-white/10 bg-white/5 backdrop-blur-sm rounded-xl p-5 md:p-8 my-3 md:my-4 text-xs sm:text-sm text-gray-300 hover:border-white/30 transition-all shadow-[0_4px_30px_rgba(0,0,0,0.1)]' key={index}>
+              <img className='w-12 filter invert' src={assets.parcel_icon} alt="" />
+              <div>
+                <div className="font-bold text-white mb-2">
+                  {order.items.map((item, index) => {
+                    if (index === order.items.length - 1) {
+                      return <p className='py-0.5' key={index}> {item.name} x {item.quantity} <span className="text-gray-400"> {item.size} </span> </p>
+                    }
+                    else {
+                      return <p className='py-0.5' key={index}> {item.name} x {item.quantity} <span className="text-gray-400"> {item.size} </span> ,</p>
+                    }
+                  })}
                 </div>
-                <div>
-                  <p className='font-bold text-gray-900'>{order.address.firstName + " " + order.address.lastName}</p>
-                  <p className="text-gray-500 mt-1">{order.address.street}</p>
-                  <p className="text-gray-500">{order.address.city}, {order.address.state} {order.address.zipcode}, {order.address.country}</p>
-                  <p className="text-gray-500 mt-1 font-medium">{order.address.phone}</p>
+                <p className='mt-3 mb-2 font-bold text-white uppercase tracking-wider'>{order.address.firstName + " " + order.address.lastName}</p>
+                <div className="text-gray-400">
+                  <p>{order.address.street + ","}</p>
+                  <p>{order.address.city + ", " + order.address.state + ", " + order.address.country + ", " + order.address.zipcode}</p>
                 </div>
+                <p className="mt-2 text-white">{order.address.phone}</p>
               </div>
-              <div className="space-y-1 text-sm bg-gray-50 p-4 rounded-lg border border-gray-100">
-                <p className="flex justify-between gap-4"><span className="text-gray-500">Items:</span> <span className="font-bold text-gray-900">{order.items.length}</span></p>
-                <p className="flex justify-between gap-4"><span className="text-gray-500">Method:</span> <span className="font-bold text-gray-900">{order.paymentMethod}</span></p>
-                <p className="flex justify-between gap-4"><span className="text-gray-500">Payment:</span> <span className={`font-bold ${order.payment ? 'text-green-600' : 'text-yellow-600'}`}>{ order.payment ? 'Done' : 'Pending' }</span></p>
-                <p className="flex justify-between gap-4"><span className="text-gray-500">Date:</span> <span className="font-bold text-gray-900">{new Date(order.date).toLocaleDateString()}</span></p>
+              <div className="flex flex-col gap-1">
+                <p className='text-sm sm:text-[15px]'>Items : <span className="font-bold text-white">{order.items.length}</span></p>
+                <p className='mt-2'>Method : <span className="font-bold text-white uppercase">{order.paymentMethod}</span></p>
+                <p>Payment : <span className={`font-bold uppercase tracking-wider ${order.payment ? 'text-green-400' : 'text-yellow-400'}`}>{ order.payment ? 'Done' : 'Pending' }</span></p>
+                <p>Date : <span className="font-bold text-white">{new Date(order.date).toLocaleDateString()}</span></p>
               </div>
-              <div className="text-xl font-bold text-gray-900">
-                {currency}{order.amount}
-              </div>
-              <select onChange={(event)=>statusHandler(event,order._id)} value={order.status} className='p-2.5 bg-white font-bold border border-gray-200 rounded-lg outline-none focus:ring-1 focus:ring-black text-sm cursor-pointer'>
+              <p className='text-lg font-black text-white'>{currency}{order.amount}</p>
+              <select onChange={(event)=>statusHandler(event,order._id)} value={order.status} className='p-2.5 font-bold uppercase tracking-wider text-[10px] bg-[#111] text-white border border-white/20 rounded-lg outline-none focus:border-white focus:ring-1 focus:ring-white transition-all'>
                 <option value="Order Placed">Order Placed</option>
                 <option value="Packing">Packing</option>
                 <option value="Shipped">Shipped</option>
@@ -93,6 +91,11 @@ const Orders = ({ token }) => {
             </div>
           ))
         }
+        {orders.length === 0 && (
+            <div className="text-center py-20 text-gray-500 font-bold uppercase tracking-widest text-sm">
+                No orders found.
+            </div>
+        )}
       </div>
     </div>
   )

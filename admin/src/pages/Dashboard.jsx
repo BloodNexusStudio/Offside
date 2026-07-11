@@ -41,23 +41,17 @@ const Dashboard = ({ token }) => {
   }, [token])
 
   if (loading) {
-    return <div className="flex items-center justify-center h-[60vh]">Loading Dashboard...</div>
+    return <div className="flex items-center justify-center h-[60vh] text-white">Loading Dashboard...</div>
   }
 
   // --- KPI Calculations ---
-  // Total Revenue: Sum of all order amounts (excluding cancelled/returned if we had those, but let's assume all valid)
   const totalRevenue = orders.reduce((sum, order) => sum + order.amount, 0);
   const totalOrders = orders.length;
   const totalProducts = products.length;
-  
-  // Unique Customers (based on distinct user IDs or emails from orders)
   const uniqueCustomers = new Set(orders.map(o => o.userId)).size;
-
-  // Average Order Value
   const aov = totalOrders > 0 ? (totalRevenue / totalOrders).toFixed(2) : 0;
 
   // --- Chart Data: Sales Overview ---
-  // Group orders by date (simplified to last 7-14 days or just mapping the available data)
   const salesMap = {};
   orders.forEach(order => {
     const dateStr = new Date(order.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -67,7 +61,7 @@ const Dashboard = ({ token }) => {
   const salesData = Object.keys(salesMap).map(date => ({
     name: date,
     Revenue: salesMap[date]
-  })).reverse().slice(-14); // Last 14 days of activity
+  })).reverse().slice(-14);
 
   // --- Chart Data: Order Status ---
   const statusCounts = orders.reduce((acc, order) => {
@@ -83,83 +77,75 @@ const Dashboard = ({ token }) => {
   const COLORS = ['#F59E0B', '#3B82F6', '#10B981', '#8B5CF6', '#EF4444'];
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 text-white">
       
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm p-6 shadow-sm hover:border-white/30 transition-all cursor-pointer">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">Total Revenue</p>
-            <div className="p-2 bg-gray-50 rounded-lg border border-gray-100">
-              <Wallet className="h-5 w-5 text-gray-600" />
-            </div>
+            <p className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase">Total Revenue</p>
+            <Wallet className="h-5 w-5 text-gray-400" />
           </div>
-          <p className="mt-4 text-3xl font-black text-gray-900 tracking-tight">{currency}{totalRevenue.toLocaleString()}</p>
-          <p className="mt-2 text-sm font-semibold text-green-600 flex items-center"><ArrowUpRight className="h-4 w-4 mr-1"/> 12% from last month</p>
+          <p className="mt-4 text-3xl font-black">{currency}{totalRevenue.toLocaleString()}</p>
+          <p className="mt-1 text-xs text-green-400 flex items-center"><ArrowUpRight className="h-4 w-4 mr-1"/> 12% from last month</p>
         </div>
 
-        <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm p-6 shadow-sm hover:border-white/30 transition-all cursor-pointer">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">Total Orders</p>
-            <div className="p-2 bg-gray-50 rounded-lg border border-gray-100">
-              <ShoppingCart className="h-5 w-5 text-gray-600" />
-            </div>
+            <p className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase">Total Orders</p>
+            <ShoppingCart className="h-5 w-5 text-gray-400" />
           </div>
-          <p className="mt-4 text-3xl font-black text-gray-900 tracking-tight">{totalOrders}</p>
-          <p className="mt-2 text-sm font-semibold text-green-600 flex items-center"><ArrowUpRight className="h-4 w-4 mr-1"/> 8% from last month</p>
+          <p className="mt-4 text-3xl font-black">{totalOrders}</p>
+          <p className="mt-1 text-xs text-green-400 flex items-center"><ArrowUpRight className="h-4 w-4 mr-1"/> 8% from last month</p>
         </div>
 
-        <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm p-6 shadow-sm hover:border-white/30 transition-all cursor-pointer">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">Total Customers</p>
-            <div className="p-2 bg-gray-50 rounded-lg border border-gray-100">
-              <Users className="h-5 w-5 text-gray-600" />
-            </div>
+            <p className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase">Customers</p>
+            <Users className="h-5 w-5 text-gray-400" />
           </div>
-          <p className="mt-4 text-3xl font-black text-gray-900 tracking-tight">{uniqueCustomers}</p>
-          <p className="mt-2 text-sm font-medium text-gray-400 flex items-center">— 0% from last month</p>
+          <p className="mt-4 text-3xl font-black">{uniqueCustomers}</p>
+          <p className="mt-1 text-xs text-gray-500 flex items-center">— 0% from last month</p>
         </div>
 
-        <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm hover:shadow-md transition-shadow">
+        <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm p-6 shadow-sm hover:border-white/30 transition-all cursor-pointer">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">Total Products</p>
-            <div className="p-2 bg-gray-50 rounded-lg border border-gray-100">
-              <PackageSearch className="h-5 w-5 text-gray-600" />
-            </div>
+            <p className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase">Products</p>
+            <PackageSearch className="h-5 w-5 text-gray-400" />
           </div>
-          <p className="mt-4 text-3xl font-black text-gray-900 tracking-tight">{totalProducts}</p>
-          <p className="mt-2 text-sm font-medium text-gray-400 flex items-center">— 0% from last month</p>
+          <p className="mt-4 text-3xl font-black">{totalProducts}</p>
+          <p className="mt-1 text-xs text-gray-500 flex items-center">— 0% from last month</p>
         </div>
       </div>
 
       {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         {/* Line Chart */}
-        <div className="lg:col-span-2 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+        <div className="lg:col-span-2 rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-base font-bold text-gray-900">Sales Overview</h2>
-            <select className="text-sm border-gray-300 rounded-md shadow-sm focus:border-offside-black focus:ring-offside-black">
-              <option>Revenue</option>
-              <option>Orders</option>
+            <h2 className="text-sm font-bold uppercase tracking-wider">Sales Overview</h2>
+            <select className="text-xs bg-transparent border border-white/20 rounded-md shadow-sm text-white focus:border-white focus:ring-white outline-none">
+              <option className="bg-[#111]">Revenue</option>
+              <option className="bg-[#111]">Orders</option>
             </select>
           </div>
           <div className="h-72 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={salesData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                <Line type="monotone" dataKey="Revenue" stroke="#000000" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 8 }} />
-                <CartesianGrid stroke="#ccc" strokeDasharray="5 5" vertical={false} />
-                <XAxis dataKey="name" tick={{fontSize: 12, fill: '#6B7280'}} axisLine={false} tickLine={false} />
-                <YAxis tick={{fontSize: 12, fill: '#6B7280'}} axisLine={false} tickLine={false} tickFormatter={(val) => `${currency}${val}`} />
-                <Tooltip cursor={{strokeDasharray: '3 3'}} contentStyle={{borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}}/>
+                <Line type="monotone" dataKey="Revenue" stroke="#ffffff" strokeWidth={3} dot={{ r: 4, fill: '#0a0a0a', stroke: '#fff' }} activeDot={{ r: 8, fill: '#fff' }} />
+                <CartesianGrid stroke="#333" strokeDasharray="5 5" vertical={false} />
+                <XAxis dataKey="name" tick={{fontSize: 12, fill: '#9CA3AF'}} axisLine={false} tickLine={false} />
+                <YAxis tick={{fontSize: 12, fill: '#9CA3AF'}} axisLine={false} tickLine={false} tickFormatter={(val) => `${currency}${val}`} />
+                <Tooltip cursor={{strokeDasharray: '3 3', stroke: '#555'}} contentStyle={{backgroundColor: '#0a0a0a', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)'}} itemStyle={{color: '#fff'}}/>
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Pie Chart */}
-        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm flex flex-col">
-          <h2 className="text-base font-bold text-gray-900 mb-6">Order Status</h2>
+        <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm p-6 shadow-sm flex flex-col">
+          <h2 className="text-sm font-bold uppercase tracking-wider mb-6">Order Status</h2>
           <div className="flex-1 flex items-center justify-center relative">
             <ResponsiveContainer width="100%" height={200}>
               <PieChart>
@@ -177,59 +163,59 @@ const Dashboard = ({ token }) => {
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip contentStyle={{borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}}/>
+                <Tooltip contentStyle={{backgroundColor: '#0a0a0a', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)'}} itemStyle={{color: '#fff'}}/>
               </PieChart>
             </ResponsiveContainer>
             {/* Center Text */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-2xl font-bold text-gray-900">{totalOrders}</span>
-              <span className="text-xs text-gray-500">Total</span>
+              <span className="text-2xl font-black">{totalOrders}</span>
+              <span className="text-[10px] tracking-widest text-gray-400 uppercase">Total</span>
             </div>
           </div>
           <div className="mt-6 space-y-2">
             {pieData.map((entry, index) => (
-              <div key={index} className="flex items-center justify-between text-sm">
+              <div key={index} className="flex items-center justify-between text-xs font-bold tracking-wider uppercase">
                 <div className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></div>
-                  <span className="text-gray-600">{entry.name}</span>
+                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></div>
+                  <span className="text-gray-300">{entry.name}</span>
                 </div>
-                <span className="font-medium text-gray-900">{entry.value} ({(entry.value/totalOrders*100).toFixed(0)}%)</span>
+                <span>{entry.value} ({(entry.value/totalOrders*100).toFixed(0)}%)</span>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Bottom Section: Recent Orders & Top Products */}
+      {/* Bottom Section: Recent Orders & Store Performance */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         {/* Recent Orders */}
-        <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden flex flex-col">
-          <div className="p-6 border-b border-gray-200 flex items-center justify-between">
-            <h2 className="text-base font-bold text-gray-900">Recent Orders</h2>
-            <button className="text-sm font-medium text-offside-black hover:underline">View All</button>
+        <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-sm overflow-hidden flex flex-col">
+          <div className="p-6 border-b border-white/10 flex items-center justify-between">
+            <h2 className="text-sm font-bold uppercase tracking-wider">Recent Orders</h2>
+            <button className="text-xs font-bold text-gray-400 hover:text-white uppercase tracking-wider transition-colors">View All</button>
           </div>
           <div className="p-0 overflow-x-auto flex-1">
-            <table className="w-full text-left text-sm text-gray-600">
-              <thead className="bg-gray-50 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+            <table className="w-full text-left text-sm text-gray-300">
+              <thead className="bg-white/5 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em]">
                 <tr>
-                  <th className="px-6 py-4 border-b border-gray-200">Customer</th>
-                  <th className="px-6 py-4 border-b border-gray-200">Date</th>
-                  <th className="px-6 py-4 border-b border-gray-200">Total</th>
-                  <th className="px-6 py-4 border-b border-gray-200">Status</th>
+                  <th className="px-6 py-4 border-b border-white/10">Customer</th>
+                  <th className="px-6 py-4 border-b border-white/10">Date</th>
+                  <th className="px-6 py-4 border-b border-white/10">Total</th>
+                  <th className="px-6 py-4 border-b border-white/10">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
+              <tbody className="divide-y divide-white/10">
                 {orders.slice(0, 5).map((order, i) => (
-                  <tr key={i} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 font-medium text-gray-900">{order.address.firstName} {order.address.lastName}</td>
-                    <td className="px-6 py-4">{new Date(order.date).toLocaleDateString()}</td>
-                    <td className="px-6 py-4 font-medium">{currency}{order.amount}</td>
+                  <tr key={i} className="hover:bg-white/5 transition-colors">
+                    <td className="px-6 py-4 font-bold text-white">{order.address.firstName} {order.address.lastName}</td>
+                    <td className="px-6 py-4 text-xs">{new Date(order.date).toLocaleDateString()}</td>
+                    <td className="px-6 py-4 font-bold">{currency}{order.amount}</td>
                     <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        order.status === 'Delivered' ? 'bg-green-100 text-green-800' :
-                        order.status === 'Shipped' ? 'bg-blue-100 text-blue-800' :
-                        'bg-yellow-100 text-yellow-800'
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                        order.status === 'Delivered' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
+                        order.status === 'Shipped' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
+                        'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
                       }`}>
                         {order.status}
                       </span>
@@ -239,8 +225,8 @@ const Dashboard = ({ token }) => {
                 {orders.length === 0 && (
                   <tr>
                     <td colSpan="4" className="px-6 py-12 text-center text-gray-500">
-                      <PackageSearch className="mx-auto h-8 w-8 text-gray-400 mb-3" />
-                      <p>No orders found</p>
+                      <PackageSearch className="mx-auto h-8 w-8 text-gray-600 mb-3" />
+                      <p className="text-xs uppercase tracking-widest font-bold">No orders found</p>
                     </td>
                   </tr>
                 )}
@@ -250,43 +236,43 @@ const Dashboard = ({ token }) => {
         </div>
 
         {/* Store Performance */}
-        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-          <h2 className="text-base font-bold text-gray-900 mb-6">Store Performance</h2>
+        <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm p-6 shadow-sm">
+          <h2 className="text-sm font-bold uppercase tracking-wider mb-6">Store Performance</h2>
           <div className="grid grid-cols-2 gap-4">
             
-            <div className="border border-gray-100 bg-gray-50 rounded-lg p-4">
+            <div className="border border-white/10 bg-white/5 rounded-lg p-4 hover:border-white/30 transition-all">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Conversion Rate</p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Conversion</p>
                 <Activity className="h-4 w-4 text-gray-400" />
               </div>
-              <p className="text-2xl font-bold text-gray-900">3.2%</p>
-              <p className="text-xs text-green-600 mt-1 flex items-center"><ArrowUpRight className="h-3 w-3 mr-1"/> +0.4%</p>
+              <p className="text-2xl font-black">3.2%</p>
+              <p className="text-xs text-green-400 mt-1 flex items-center"><ArrowUpRight className="h-3 w-3 mr-1"/> +0.4%</p>
             </div>
 
-            <div className="border border-gray-100 bg-gray-50 rounded-lg p-4">
+            <div className="border border-white/10 bg-white/5 rounded-lg p-4 hover:border-white/30 transition-all">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Avg Order Value</p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">AOV</p>
                 <ShoppingBag className="h-4 w-4 text-gray-400" />
               </div>
-              <p className="text-2xl font-bold text-gray-900">{currency}{aov}</p>
-              <p className="text-xs text-green-600 mt-1 flex items-center"><ArrowUpRight className="h-3 w-3 mr-1"/> +12%</p>
+              <p className="text-2xl font-black">{currency}{aov}</p>
+              <p className="text-xs text-green-400 mt-1 flex items-center"><ArrowUpRight className="h-3 w-3 mr-1"/> +12%</p>
             </div>
 
-            <div className="border border-gray-100 bg-gray-50 rounded-lg p-4">
+            <div className="border border-white/10 bg-white/5 rounded-lg p-4 hover:border-white/30 transition-all">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Refund Rate</p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Refund Rate</p>
                 <RotateCcw className="h-4 w-4 text-gray-400" />
               </div>
-              <p className="text-2xl font-bold text-gray-900">0.0%</p>
+              <p className="text-2xl font-black">0.0%</p>
               <p className="text-xs text-gray-500 mt-1 flex items-center">— 0%</p>
             </div>
 
-            <div className="border border-gray-100 bg-gray-50 rounded-lg p-4">
+            <div className="border border-white/10 bg-white/5 rounded-lg p-4 hover:border-white/30 transition-all">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Cart Abandonment</p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Abandonment</p>
                 <ShoppingCart className="h-4 w-4 text-gray-400" />
               </div>
-              <p className="text-2xl font-bold text-gray-900">24%</p>
+              <p className="text-2xl font-black">24%</p>
               <p className="text-xs text-gray-500 mt-1 flex items-center">— 0%</p>
             </div>
 
