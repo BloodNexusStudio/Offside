@@ -4,20 +4,9 @@ import { LayoutDashboard, PlusCircle, ListTodo, Package, Users, Star, Settings, 
 import { assets } from '../assets/assets'
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
-  return (
-    <>
-      {/* Mobile Overlay */}
-      {sidebarOpen && (
-        <div 
-          className="fixed inset-0 z-40 bg-gray-900/80 backdrop-blur-sm lg:hidden" 
-          onClick={() => setSidebarOpen(false)} 
-        />
-      )}
 
-      <div className={`
-        fixed inset-y-0 left-0 z-50 flex flex-col w-64 min-h-screen border-r border-gray-200 bg-white transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-      `}>
+  const sidebarContent = (
+    <>
         {/* Logo */}
         <div className="flex h-16 shrink-0 items-center border-b border-gray-200 px-6">
             <img className='h-6 w-auto' src={assets.logo} alt="OFFSIDE" />
@@ -91,6 +80,28 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                 </div>
             </div>
         </div>
+    </>
+  );
+
+  return (
+    <>
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 z-40 bg-gray-900/80 backdrop-blur-sm lg:hidden" 
+          onClick={() => setSidebarOpen(false)} 
+        />
+      )}
+
+      {/* Mobile Sidebar (Fixed & Animated) */}
+      <div className={`fixed inset-y-0 left-0 z-50 flex flex-col w-64 min-h-screen bg-white shadow-2xl transform transition-transform duration-300 ease-in-out lg:hidden ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        {sidebarContent}
+      </div>
+
+      {/* Desktop Sidebar (Static) */}
+      <div className="hidden lg:flex flex-col w-64 min-h-screen border-r border-gray-200 bg-white shrink-0">
+        {sidebarContent}
+      </div>
     </>
   )
 }
