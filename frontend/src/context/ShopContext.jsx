@@ -17,6 +17,25 @@ const ShopContextProvider = (props) => {
     const [token, setToken] = useState('')
     const navigate = useNavigate();
 
+    // Favourites State
+    const [favourites, setFavourites] = useState(() => {
+        const localData = localStorage.getItem('favourites');
+        return localData ? JSON.parse(localData) : [];
+    });
+
+    const toggleFavourite = (itemId) => {
+        let updatedFavourites;
+        if (favourites.includes(itemId)) {
+            updatedFavourites = favourites.filter(id => id !== itemId);
+            toast.info("Removed from Favourites", { autoClose: 1500 });
+        } else {
+            updatedFavourites = [...favourites, itemId];
+            toast.success("Added to Favourites", { autoClose: 1500 });
+        }
+        setFavourites(updatedFavourites);
+        localStorage.setItem('favourites', JSON.stringify(updatedFavourites));
+    };
+
 
     const addToCart = async (itemId, size) => {
 
@@ -159,7 +178,8 @@ const ShopContextProvider = (props) => {
         cartItems, addToCart,setCartItems,
         getCartCount, updateQuantity,
         getCartAmount, navigate, backendUrl,
-        setToken, token
+        setToken, token,
+        favourites, toggleFavourite
     }
 
     return (

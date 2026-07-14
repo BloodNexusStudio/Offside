@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { Heart, Plus } from 'lucide-react'
 
 const CollectionProductItem = ({ id, image, name, price, mainPrice }) => {
-    const { currency } = useContext(ShopContext);
+    const { currency, favourites, toggleFavourite } = useContext(ShopContext);
 
     return (
         <Link className='cursor-pointer block group rounded-md overflow-hidden' to={`/product/${id}`}>
@@ -24,8 +24,11 @@ const CollectionProductItem = ({ id, image, name, price, mainPrice }) => {
                 <div className='absolute top-4 left-4 bg-black text-white text-[10px] font-bold px-3 py-1 z-10 uppercase tracking-wider rounded-sm'>
                     NEW
                 </div>
-                <div className='absolute top-4 right-4 z-10'>
-                    <Heart className='w-5 h-5 text-white/70 hover:text-white transition-colors stroke-[1.5]' />
+                <div 
+                    className='absolute top-4 right-4 z-20 cursor-pointer' 
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleFavourite(id); }}
+                >
+                    <Heart className={`w-5 h-5 transition-colors stroke-[1.5] ${favourites?.includes(id) ? 'fill-red-500 text-red-500 stroke-red-500' : 'text-white/70 hover:text-white'}`} />
                 </div>
 
                 {/* Bottom Gradient Overlay */}
