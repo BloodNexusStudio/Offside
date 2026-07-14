@@ -109,21 +109,7 @@ const Hero = () => {
             className="w-full h-full object-cover"
           />
           
-          {/* Slider Controls */}
-          <div className="absolute right-6 sm:right-12 top-1/2 -translate-y-1/2 flex flex-col items-center gap-4 z-20">
-            <button className="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors backdrop-blur-sm">
-                <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button className="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white hover:text-black transition-colors backdrop-blur-sm">
-                <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
 
-          <div className="absolute bottom-12 right-6 sm:right-12 flex items-center gap-2">
-            <div className="w-8 h-[2px] bg-white"></div>
-            <div className="w-8 h-[2px] bg-white/30"></div>
-            <div className="w-8 h-[2px] bg-white/30"></div>
-          </div>
         </div>
 
       </div>

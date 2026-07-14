@@ -101,132 +101,137 @@ const Add = ({token}) => {
    }
 
   return (
-    <div className="max-w-4xl">
-      <h3 className="text-sm font-bold uppercase tracking-wider text-white mb-6">Add New Product</h3>
-      <form onSubmit={onSubmitHandler} className='flex flex-col w-full items-start gap-6'>
-          
-          <div className="w-full bg-white/5 border border-white/10 p-6 rounded-xl backdrop-blur-sm">
-              <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-4">Product Variants (Colors)</h3>
-              <div className="flex flex-col gap-6">
-                  {colors.map((color, colorIdx) => (
-                      <div key={colorIdx} className="border border-white/10 p-5 rounded-lg bg-[#0a0a0a]/50">
-                          <div className="flex items-center justify-between mb-4">
-                              <input 
-                                  type="text" 
-                                  value={color.name} 
-                                  onChange={(e) => handleColorNameChange(colorIdx, e.target.value)}
-                                  placeholder="COLOR NAME (E.G., BLACK, WHITE)"
-                                  className="px-4 py-2 border border-white/20 bg-transparent text-white placeholder-gray-600 font-bold uppercase tracking-wider text-xs min-w-[200px] outline-none focus:border-white transition-colors rounded-md"
-                                  required
-                              />
-                              {colors.length > 1 && (
-                                  <button type="button" onClick={() => removeColorBlock(colorIdx)} className="text-red-500 hover:text-red-400 text-[10px] uppercase tracking-[0.2em] font-bold transition-colors">Remove</button>
-                              )}
-                          </div>
-                          <div className='flex gap-4 overflow-x-auto pb-2'>
-                              {[0, 1, 2, 3].map((imgIdx) => (
-                                  <label key={imgIdx} htmlFor={`image_${colorIdx}_${imgIdx}`} className="shrink-0 group">
-                                      <div className={`w-24 h-24 sm:w-32 sm:h-32 border-2 border-dashed flex items-center justify-center rounded-lg cursor-pointer transition-all ${!color.images[imgIdx] ? 'border-white/20 hover:border-white/50 bg-white/5' : 'border-transparent'}`}>
-                                          {!color.images[imgIdx] ? (
-                                              <img className='w-8 h-8 opacity-50 filter invert group-hover:opacity-100 transition-opacity' src={assets.upload_area} alt="Upload" />
-                                          ) : (
-                                              <img className='w-full h-full object-cover rounded-lg' src={URL.createObjectURL(color.images[imgIdx])} alt="Preview" />
-                                          )}
-                                      </div>
-                                      <input onChange={(e)=>handleColorImageChange(colorIdx, imgIdx, e.target.files[0])} type="file" id={`image_${colorIdx}_${imgIdx}`} hidden/>
-                                  </label>
-                              ))}
-                          </div>
-                      </div>
-                  ))}
-              </div>
-              <button type="button" onClick={addColorBlock} className="mt-6 border border-white/20 text-white px-6 py-3 text-xs font-bold uppercase tracking-wider hover:bg-white hover:text-black transition-colors rounded-lg">
-                  + Add Another Color
-              </button>
-          </div>
+    <form onSubmit={onSubmitHandler} className='flex flex-col w-full items-start gap-5'>
+        
+        <div className="w-full">
+            <h3 className="text-lg font-bold mb-4">Product Variants (Colors)</h3>
+            <div className="flex flex-col gap-6">
+                {colors.map((color, colorIdx) => (
+                    <div key={colorIdx} className="border border-gray-200 p-4 rounded bg-white">
+                        <div className="flex items-center justify-between mb-4">
+                            <input 
+                                type="text" 
+                                value={color.name} 
+                                onChange={(e) => handleColorNameChange(colorIdx, e.target.value)}
+                                placeholder="Color Name (e.g., Black, White)"
+                                className="px-3 py-2 border border-gray-300 min-w-[200px]"
+                                required
+                            />
+                            {colors.length > 1 && (
+                                <button type="button" onClick={() => removeColorBlock(colorIdx)} className="text-red-500 text-sm font-bold">Remove</button>
+                            )}
+                        </div>
+                        <div className='flex gap-2'>
+                            {[0, 1, 2, 3].map((imgIdx) => (
+                                <label key={imgIdx} htmlFor={`image_${colorIdx}_${imgIdx}`}>
+                                    <img className='w-20 object-cover rounded cursor-pointer border border-gray-100' src={!color.images[imgIdx] ? assets.upload_area : URL.createObjectURL(color.images[imgIdx])} alt="" />
+                                    <input onChange={(e)=>handleColorImageChange(colorIdx, imgIdx, e.target.files[0])} type="file" id={`image_${colorIdx}_${imgIdx}`} hidden/>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+            <button type="button" onClick={addColorBlock} className="mt-4 border border-black text-black px-4 py-2 text-sm font-medium hover:bg-gray-50 transition-colors">
+                + Add Another Color
+            </button>
+        </div>
 
-          <div className="w-full bg-white/5 border border-white/10 p-6 rounded-xl backdrop-blur-sm grid grid-cols-1 gap-6">
-            <div className='w-full'>
-              <p className='text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-2'>Product name</p>
-              <input onChange={(e)=>setName(e.target.value)} value={name} className='w-full px-4 py-3 bg-transparent border border-white/20 text-white rounded-lg outline-none focus:border-white transition-colors' type="text" placeholder='TYPE PRODUCT NAME HERE' required/>
+        <div className="w-full h-[1px] bg-gray-200 my-2"></div>
+
+        <div className='w-full'>
+          <p className='mb-2'>Product name</p>
+          <input onChange={(e)=>setName(e.target.value)} value={name} className='w-full max-w-[500px] px-3 py-2' type="text" placeholder='Type here' required/>
+        </div>
+
+        <div className='w-full'>
+          <p className='mb-2'>Product description</p>
+          <textarea onChange={(e)=>setDescription(e.target.value)} value={description} className='w-full max-w-[500px] px-3 py-2' type="text" placeholder='Write content here' required/>
+        </div>
+
+        <div className='flex flex-col sm:flex-row gap-2 w-full sm:gap-8'>
+
+            <div>
+              <p className='mb-2'>Product category</p>
+              <select onChange={(e) => setCategory(e.target.value)} className='w-full px-3 py-2'>
+                  <option value="Men">Men</option>
+                  <option value="Women">Women</option>
+                  <option value="Kids">Kids</option>
+              </select>
             </div>
 
-            <div className='w-full'>
-              <p className='text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-2'>Product description</p>
-              <textarea onChange={(e)=>setDescription(e.target.value)} value={description} className='w-full px-4 py-3 bg-transparent border border-white/20 text-white rounded-lg outline-none focus:border-white transition-colors min-h-[120px]' type="text" placeholder='WRITE CONTENT HERE' required/>
+            <div>
+              <p className='mb-2'>Sub category</p>
+              <select onChange={(e) => setSubCategory(e.target.value)} className='w-full px-3 py-2'>
+                  <option value="Topwear">Topwear</option>
+                  <option value="Bottomwear">Bottomwear</option>
+                  <option value="Winterwear">Winterwear</option>
+              </select>
             </div>
 
-            <div className='grid grid-cols-2 sm:grid-cols-3 gap-6 w-full'>
+            <div>
+              <p className='mb-2'>Collection (Optional)</p>
+              <input onChange={(e) => setProductCollection(e.target.value)} value={productCollection} className='w-full px-3 py-2 sm:w-[150px]' type="text" placeholder='e.g. FIFA' />
+            </div>
 
-                <div>
-                  <p className='text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-2'>Category</p>
-                  <select onChange={(e) => setCategory(e.target.value)} className='w-full px-4 py-3 bg-[#0a0a0a] border border-white/20 text-white rounded-lg outline-none focus:border-white transition-colors'>
-                      <option value="Men">Men</option>
-                      <option value="Women">Women</option>
-                      <option value="Kids">Kids</option>
-                  </select>
-                </div>
+            <div>
+              <p className='mb-2'>Fit</p>
+              <select onChange={(e) => setFit(e.target.value)} value={fit} className='w-full px-3 py-2'>
+                  <option value="Regular Fit">Regular Fit</option>
+                  <option value="Oversized Fit">Oversized Fit</option>
+                  <option value="Slim Fit">Slim Fit</option>
+              </select>
+            </div>
 
-                <div>
-                  <p className='text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-2'>Sub category</p>
-                  <select onChange={(e) => setSubCategory(e.target.value)} className='w-full px-4 py-3 bg-[#0a0a0a] border border-white/20 text-white rounded-lg outline-none focus:border-white transition-colors'>
-                      <option value="Topwear">Topwear</option>
-                      <option value="Bottomwear">Bottomwear</option>
-                      <option value="Winterwear">Winterwear</option>
-                  </select>
-                </div>
+            <div>
+              <p className='mb-2'>Main Price</p>
+              <input onChange={(e) => setMainPrice(e.target.value)} value={mainPrice} className='w-full px-3 py-2 sm:w-[120px]' type="Number" placeholder='e.g. 2000' />
+            </div>
 
-                <div>
-                  <p className='text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-2'>Collection (Optional)</p>
-                  <input onChange={(e) => setProductCollection(e.target.value)} value={productCollection} className='w-full px-4 py-3 bg-transparent border border-white/20 text-white rounded-lg outline-none focus:border-white transition-colors uppercase' type="text" placeholder='E.G. FIFA' />
-                </div>
+            <div>
+              <p className='mb-2'>Offer Price</p>
+              <input onChange={(e) => setPrice(e.target.value)} value={price} className='w-full px-3 py-2 sm:w-[120px]' type="Number" placeholder='e.g. 1500' required />
+            </div>
 
-                <div>
-                  <p className='text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-2'>Fit</p>
-                  <select onChange={(e) => setFit(e.target.value)} value={fit} className='w-full px-4 py-3 bg-[#0a0a0a] border border-white/20 text-white rounded-lg outline-none focus:border-white transition-colors'>
-                      <option value="Regular Fit">Regular Fit</option>
-                      <option value="Oversized Fit">Oversized Fit</option>
-                      <option value="Slim Fit">Slim Fit</option>
-                  </select>
-                </div>
+        </div>
 
-                <div>
-                  <p className='text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-2'>Main Price</p>
-                  <input onChange={(e) => setMainPrice(e.target.value)} value={mainPrice} className='w-full px-4 py-3 bg-transparent border border-white/20 text-white rounded-lg outline-none focus:border-white transition-colors' type="Number" placeholder='E.G. 2000' />
-                </div>
+        <div>
+          <p className='mb-2'>Product Sizes</p>
+          <div className='flex gap-3 flex-wrap'>
+            <div onClick={()=>setSizes(prev => prev.includes("S") ? prev.filter( item => item !== "S") : [...prev,"S"])}>
+              <p className={`${sizes.includes("S") ? "bg-pink-100" : "bg-slate-200" } px-3 py-1 cursor-pointer`}>S</p>
+            </div>
+            
+            <div onClick={()=>setSizes(prev => prev.includes("M") ? prev.filter( item => item !== "M") : [...prev,"M"])}>
+              <p className={`${sizes.includes("M") ? "bg-pink-100" : "bg-slate-200" } px-3 py-1 cursor-pointer`}>M</p>
+            </div>
 
-                <div>
-                  <p className='text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-2'>Offer Price</p>
-                  <input onChange={(e) => setPrice(e.target.value)} value={price} className='w-full px-4 py-3 bg-transparent border border-white/20 text-white rounded-lg outline-none focus:border-white transition-colors' type="Number" placeholder='E.G. 1500' required />
-                </div>
+            <div onClick={()=>setSizes(prev => prev.includes("L") ? prev.filter( item => item !== "L") : [...prev,"L"])}>
+              <p className={`${sizes.includes("L") ? "bg-pink-100" : "bg-slate-200" } px-3 py-1 cursor-pointer`}>L</p>
+            </div>
 
+            <div onClick={()=>setSizes(prev => prev.includes("XL") ? prev.filter( item => item !== "XL") : [...prev,"XL"])}>
+              <p className={`${sizes.includes("XL") ? "bg-pink-100" : "bg-slate-200" } px-3 py-1 cursor-pointer`}>XL</p>
+            </div>
+
+            <div onClick={()=>setSizes(prev => prev.includes("XXL") ? prev.filter( item => item !== "XXL") : [...prev,"XXL"])}>
+              <p className={`${sizes.includes("XXL") ? "bg-pink-100" : "bg-slate-200" } px-3 py-1 cursor-pointer`}>XXL</p>
+            </div>
+
+            <div onClick={()=>setSizes(prev => prev.includes("Free Size") ? prev.filter( item => item !== "Free Size") : [...prev,"Free Size"])}>
+              <p className={`${sizes.includes("Free Size") ? "bg-pink-100" : "bg-slate-200" } px-3 py-1 cursor-pointer`}>Free Size</p>
             </div>
           </div>
+        </div>
 
-          <div className="w-full bg-white/5 border border-white/10 p-6 rounded-xl backdrop-blur-sm">
-            <p className='text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-4'>Product Sizes</p>
-            <div className='flex gap-3 flex-wrap'>
-              {['S', 'M', 'L', 'XL', 'XXL', 'Free Size'].map((size) => (
-                <div key={size} onClick={()=>setSizes(prev => prev.includes(size) ? prev.filter( item => item !== size) : [...prev, size])}>
-                  <p className={`${sizes.includes(size) ? "bg-white text-black font-black" : "bg-transparent text-gray-400 hover:text-white hover:border-white/50" } border border-white/20 px-5 py-2 cursor-pointer transition-all rounded uppercase tracking-wider text-sm`}>
-                    {size}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
+        <div className='flex gap-2 mt-2'>
+          <input onChange={() => setBestseller(prev => !prev)} checked={bestseller} type="checkbox" id='bestseller' />
+          <label className='cursor-pointer' htmlFor="bestseller">Add to bestseller</label>
+        </div>
 
-          <div className='flex gap-3 mt-2 items-center'>
-            <input onChange={() => setBestseller(prev => !prev)} checked={bestseller} type="checkbox" id='bestseller' className="w-5 h-5 accent-white cursor-pointer bg-[#0a0a0a]" />
-            <label className='cursor-pointer text-sm font-bold uppercase tracking-wider text-white' htmlFor="bestseller">Add to bestseller</label>
-          </div>
+        <button type="submit" className='w-28 py-3 mt-4 bg-black text-white'>ADD</button>
 
-          <button type="submit" className='w-full sm:w-auto px-12 py-4 mt-4 bg-white text-black font-black uppercase tracking-[0.2em] hover:bg-gray-200 transition-colors rounded-lg'>
-            Add Product
-          </button>
-
-      </form>
-    </div>
+    </form>
   )
 }
 

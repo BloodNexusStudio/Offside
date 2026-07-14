@@ -16,24 +16,20 @@ export const currency = '₹'
 const App = () => {
 
   const [token, setToken] = useState(localStorage.getItem('token')?localStorage.getItem('token'):'');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(()=>{
     localStorage.setItem('token',token)
   },[token])
 
   return (
-    <div className='bg-[#0a0a0a] min-h-screen font-sans text-white'>
-      <ToastContainer theme="dark" />
+    <div className='bg-gray-50 min-h-screen font-sans text-gray-900'>
+      <ToastContainer />
       {token === ""
         ? <Login setToken={setToken} />
         : <div className="flex h-screen overflow-hidden">
-            <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-            
-            {/* Main Content Area */}
-            <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden z-0">
-              <Navbar setToken={setToken} setSidebarOpen={setSidebarOpen} sidebarOpen={sidebarOpen} />
-              
+            <Sidebar />
+            <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+              <Navbar setToken={setToken} />
               <main className="w-full">
                 <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
                   <Routes>

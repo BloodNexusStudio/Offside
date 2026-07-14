@@ -48,11 +48,12 @@ const List = ({ token }) => {
 
   return (
     <>
-      <h3 className="text-sm font-bold uppercase tracking-wider text-white mb-6">All Products List</h3>
-      <div className='flex flex-col gap-3'>
+      <p className='mb-2'>All Products List</p>
+      <div className='flex flex-col gap-2'>
 
         {/* ------- List Table Title ---------- */}
-        <div className='hidden md:grid grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center py-3 px-4 border border-white/10 bg-white/5 backdrop-blur-sm rounded-t-xl text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400'>
+
+        <div className='hidden md:grid grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center py-1 px-2 border bg-gray-100 text-sm'>
           <b>Image</b>
           <b>Name</b>
           <b>Category</b>
@@ -61,26 +62,22 @@ const List = ({ token }) => {
         </div>
 
         {/* ------ Product List ------ */}
-        <div className="flex flex-col gap-2 md:gap-0 md:bg-transparent">
+
         {
           list.map((item, index) => (
-            <div className={`grid grid-cols-[1fr_3fr_1fr] md:grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center gap-4 py-4 px-4 border border-white/10 bg-white/5 backdrop-blur-sm text-sm text-gray-300 hover:bg-white/10 transition-colors ${index === list.length - 1 ? 'md:rounded-b-xl' : ''} rounded-xl md:rounded-none`} key={index}>
-              <img className='w-14 h-14 object-cover rounded-md border border-white/20' src={item.image[0]} alt="" />
-              <p className="font-bold text-white uppercase tracking-wider">{item.name}</p>
-              <p className="text-xs uppercase tracking-widest text-gray-400">{item.category}</p>
-              <p className="font-bold text-white">
-                {item.mainPrice > 0 && <del className="text-gray-500 mr-2 text-xs">{currency}{item.mainPrice}</del>}
+            <div className='grid grid-cols-[1fr_3fr_1fr] md:grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center gap-2 py-1 px-2 border text-sm' key={index}>
+              <img className='w-12' src={item.image[0]} alt="" />
+              <p>{item.name}</p>
+              <p>{item.category}</p>
+              <p>
+                {item.mainPrice > 0 && <del className="text-gray-400 mr-1">{currency}{item.mainPrice}</del>}
                 {currency}{item.price}
               </p>
-              <div className="flex justify-end md:justify-center">
-                <button onClick={()=>removeProduct(item._id)} className='text-red-400 hover:text-red-300 hover:bg-red-500/10 p-2 rounded-lg transition-all font-bold text-[10px] uppercase tracking-widest border border-transparent hover:border-red-500/30'>
-                  Remove
-                </button>
-              </div>
+              <p onClick={()=>removeProduct(item._id)} className='text-right md:text-center cursor-pointer text-lg'>X</p>
             </div>
           ))
         }
-        </div>
+
       </div>
     </>
   )
