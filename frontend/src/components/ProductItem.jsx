@@ -11,12 +11,19 @@ const ProductItem = ({ id, image, name, price, mainPrice }) => {
         <Link className='relative text-gray-700 cursor-pointer block group bg-[#ebe9e1]/40 backdrop-blur-sm border border-gray-300/50 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-300' to={`/product/${id}`}>
             
             {/* Heart Icon outside image */}
-            <div 
+            <motion.div 
+                whileTap={{ scale: 0.8 }}
                 className='absolute top-4 right-4 z-20 cursor-pointer'
                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleFavourite(id); }}
             >
-                <Heart className={`w-5 h-5 transition-colors stroke-[1.2] ${favourites?.includes(id) ? 'fill-red-500 text-red-500 stroke-red-500' : 'text-gray-500 hover:text-offside-black'}`} />
-            </div>
+                <motion.div
+                    initial={false}
+                    animate={favourites?.includes(id) ? { scale: [1, 1.2, 1] } : { scale: 1 }}
+                    transition={{ duration: 0.3 }}
+                >
+                    <Heart className={`w-5 h-5 transition-colors stroke-[1.2] ${favourites?.includes(id) ? 'fill-red-500 text-red-500 stroke-red-500' : 'text-gray-500 hover:text-offside-black'}`} />
+                </motion.div>
+            </motion.div>
 
             <div className='relative overflow-hidden mb-5 aspect-[4/5] bg-gray-200'>
                 {/* Badges */}

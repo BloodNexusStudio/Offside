@@ -12,7 +12,10 @@ const ShopContextProvider = (props) => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL
     const [search, setSearch] = useState('');
     const [showSearch, setShowSearch] = useState(false);
-    const [cartItems, setCartItems] = useState({});
+    const [cartItems, setCartItems] = useState(() => {
+        const localData = localStorage.getItem('cartItems');
+        return localData ? JSON.parse(localData) : {};
+    });
     const [products, setProducts] = useState([]);
     const [token, setToken] = useState('')
     const navigate = useNavigate();
@@ -23,7 +26,7 @@ const ShopContextProvider = (props) => {
         return localData ? JSON.parse(localData) : [];
     });
 
-    const toggleFavourite = (itemId) => {
+    const toggleFavourite = async (itemId) => {
         let updatedFavourites;
         if (favourites.includes(itemId)) {
             updatedFavourites = favourites.filter(id => id !== itemId);
@@ -33,7 +36,18 @@ const ShopContextProvider = (props) => {
             toast.success("Added to Favourites", { autoClose: 1500 });
         }
         setFavourites(updatedFavourites);
-        localStorage.setItem('favourites', JSON.stringify(updatedFavourites));
+        
+        if (!token) {
+            localStorage.setItem('favourites', JSON.stringify(updatedFavourites));
+        }
+
+        if (token) {
+            try {
+                await axios.post(backendUrl + '/api/wishlist/update', { wishlist: updatedFavourites }, { headers: { token } });
+            } catch (error) {
+                console.log(error);
+            }
+        }
     };
 
 
@@ -59,6 +73,10 @@ const ShopContextProvider = (props) => {
             cartData[itemId][size] = 1;
         }
         setCartItems(cartData);
+
+        if (!token) {
+            localStorage.setItem('cartItems', JSON.stringify(cartData));
+        }
 
         if (token) {
             try {
@@ -96,6 +114,10 @@ const ShopContextProvider = (props) => {
         cartData[itemId][size] = quantity;
 
         setCartItems(cartData)
+
+        if (!token) {
+            localStorage.setItem('cartItems', JSON.stringify(cartData));
+        }
 
         if (token) {
             try {
@@ -145,16 +167,50 @@ const ShopContextProvider = (props) => {
         }
     }
 
-    const getUserCart = async ( token ) => {
+    const getUserCart = async ( tokenParam ) => {
         try {
+            const localCart = JSON.parse(localStorage.getItem('cartItems')) || {};
             
-            const response = await axios.post(backendUrl + '/api/cart/get',{},{headers:{token}})
-            if (response.data.success) {
-                setCartItems(response.data.cartData)
+            if (Object.keys(localCart).length > 0) {
+                const response = await axios.post(backendUrl + '/api/cart/merge', { localCart }, { headers: { token: tokenParam } });
+                if (response.data.success) {
+                    setCartItems(response.data.cartData);
+                    localStorage.removeItem('cartItems');
+                }
+            } else {
+                const response = await axios.post(backendUrl + '/api/cart/get',{},{headers:{token: tokenParam}})
+                if (response.data.success) {
+                    setCartItems(response.data.cartData)
+                }
             }
         } catch (error) {
             console.log(error)
             toast.error(error.message)
+        }
+    }
+
+    const getUserWishlist = async (tokenParam) => {
+        try {
+            const response = await axios.post(backendUrl + '/api/wishlist/get', {}, { headers: { token: tokenParam } });
+            if (response.data.success) {
+                const dbWishlist = response.data.wishlistData;
+                const localWishlist = JSON.parse(localStorage.getItem('favourites')) || [];
+                
+                // Merge without duplicates
+                const mergedWishlist = [...new Set([...dbWishlist, ...localWishlist])];
+                
+                setFavourites(mergedWishlist);
+                
+                // If there were local items, push the merged list to backend
+                if (localWishlist.length > 0) {
+                    await axios.post(backendUrl + '/api/wishlist/update', { wishlist: mergedWishlist }, { headers: { token: tokenParam } });
+                }
+
+                // Use DB as single source of truth
+                localStorage.removeItem('favourites');
+            }
+        } catch (error) {
+            console.log(error);
         }
     }
 
@@ -164,11 +220,13 @@ const ShopContextProvider = (props) => {
 
     useEffect(() => {
         if (!token && localStorage.getItem('token')) {
-            setToken(localStorage.getItem('token'))
-            getUserCart(localStorage.getItem('token'))
-        }
-        if (token) {
-            getUserCart(token)
+            const storedToken = localStorage.getItem('token');
+            setToken(storedToken);
+            getUserCart(storedToken);
+            getUserWishlist(storedToken);
+        } else if (token) {
+            getUserCart(token);
+            getUserWishlist(token);
         }
     }, [token])
 

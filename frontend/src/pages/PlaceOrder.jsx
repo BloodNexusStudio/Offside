@@ -103,6 +103,14 @@ const PlaceOrder = () => {
 
     const onSubmitHandler = async (event) => {
         event.preventDefault()
+
+        // Indian phone number validation
+        const phoneRegex = /^[6-9]\d{9}$/;
+        if (!phoneRegex.test(formData.phone)) {
+            toast.error("Please enter a valid 10-digit Indian phone number");
+            return;
+        }
+
         if (isSubmitting) return;
         setIsSubmitting(true);
         try {
@@ -268,8 +276,23 @@ const PlaceOrder = () => {
                             </div>
                         </div>
 
-                        <div className="relative w-full">
-                            <input required onChange={onChangeHandler} name='phone' value={formData.phone} className='w-full bg-[#fdfbf7]/50 backdrop-blur-sm border border-gray-300/60 rounded px-4 py-3.5 text-[13px] font-medium focus:outline-none focus:border-offside-black transition-colors placeholder:text-gray-500' type="number" placeholder='Phone number' />
+                        <div className="relative w-full flex bg-[#fdfbf7]/50 backdrop-blur-sm border border-gray-300/60 rounded overflow-hidden focus-within:border-offside-black transition-colors">
+                            <div className="flex items-center justify-center px-4 bg-gray-100/80 border-r border-gray-300/60 text-[13px] font-bold text-offside-black select-none">
+                                +91
+                            </div>
+                            <input 
+                                required 
+                                onChange={(e) => {
+                                    let val = e.target.value.replace(/\D/g, '');
+                                    if (val.length > 10) val = val.slice(0, 10);
+                                    onChangeHandler({ target: { name: 'phone', value: val } });
+                                }} 
+                                name='phone' 
+                                value={formData.phone} 
+                                className='w-full px-4 py-3.5 text-[13px] font-medium focus:outline-none bg-transparent placeholder:text-gray-500' 
+                                type="text" 
+                                placeholder='Phone number' 
+                            />
                             <Phone className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 stroke-[1.5]" />
                         </div>
                     </div>

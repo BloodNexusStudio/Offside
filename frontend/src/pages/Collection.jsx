@@ -114,7 +114,7 @@ const Collection = () => {
               Categories <span>—</span>
             </h3>
             <div className='flex flex-col gap-3'>
-              {['Men', 'Women', 'Kids', 'Unisex'].map(cat => (
+              {['Men', 'Women'].map(cat => (
                 <label key={cat} className='flex items-center gap-3 cursor-pointer group'>
                   <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${category.includes(cat) ? 'bg-offside-black border-offside-black' : 'border-gray-300 group-hover:border-gray-400'}`}>
                     {category.includes(cat) && <span className='w-2 h-2 bg-white rounded-sm'></span>}
@@ -132,7 +132,7 @@ const Collection = () => {
               Type <span>—</span>
             </h3>
             <div className='flex flex-col gap-3'>
-              {['T-Shirts', 'Hoodies', 'Bottomwear', 'Jackets', 'Accessories'].map(type => (
+              {['Topwear', 'Bottomwear', 'Winterwear'].map(type => (
                 <label key={type} className='flex items-center gap-3 cursor-pointer group'>
                   <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${subCategory.includes(type) ? 'bg-offside-black border-offside-black' : 'border-gray-300 group-hover:border-gray-400'}`}>
                     {subCategory.includes(type) && <span className='w-2 h-2 bg-white rounded-sm'></span>}
@@ -159,20 +159,6 @@ const Collection = () => {
                   {size}
                 </button>
               ))}
-            </div>
-          </div>
-
-          {/* Color (UI Only) */}
-          <div className='border-t border-gray-200 py-6'>
-            <h3 className='text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-4 flex justify-between'>
-              Color <span>—</span>
-            </h3>
-            <div className='flex flex-wrap gap-3'>
-              <div className='w-6 h-6 rounded-full bg-black border-2 border-black ring-2 ring-transparent hover:ring-gray-300 cursor-pointer transition-all'></div>
-              <div className='w-6 h-6 rounded-full bg-white border-2 border-gray-200 cursor-pointer hover:border-gray-400 transition-colors'></div>
-              <div className='w-6 h-6 rounded-full bg-gray-400 border-2 border-gray-400 cursor-pointer hover:border-gray-500 transition-colors'></div>
-              <div className='w-6 h-6 rounded-full bg-[#d2b48c] border-2 border-[#d2b48c] cursor-pointer hover:opacity-80 transition-opacity'></div>
-              <div className='w-6 h-6 rounded-full bg-[#1c2e4a] border-2 border-[#1c2e4a] cursor-pointer hover:opacity-80 transition-opacity'></div>
             </div>
           </div>
 

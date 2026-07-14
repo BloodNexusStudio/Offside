@@ -72,4 +72,38 @@ const getUserCart = async (req,res) => {
 
 }
 
-export { addToCart, updateCart, getUserCart }
+// merge local cart with user cart
+const mergeCart = async (req, res) => {
+    try {
+        const { userId, localCart } = req.body;
+
+        const userData = await userModel.findById(userId);
+        let cartData = userData.cartData || {};
+
+        if (localCart && Object.keys(localCart).length > 0) {
+            for (const itemId in localCart) {
+                for (const size in localCart[itemId]) {
+                    if (cartData[itemId]) {
+                        if (cartData[itemId][size]) {
+                            cartData[itemId][size] += localCart[itemId][size];
+                        } else {
+                            cartData[itemId][size] = localCart[itemId][size];
+                        }
+                    } else {
+                        cartData[itemId] = {};
+                        cartData[itemId][size] = localCart[itemId][size];
+                    }
+                }
+            }
+            await userModel.findByIdAndUpdate(userId, { cartData });
+        }
+
+        res.json({ success: true, cartData, message: "Cart Merged" });
+
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
+export { addToCart, updateCart, getUserCart, mergeCart }

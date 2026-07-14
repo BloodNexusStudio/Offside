@@ -19,6 +19,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsConditions from './pages/TermsConditions';
 import Verify from './pages/Verify'
+import Wishlist from './pages/Wishlist'
 import PageTransition from './components/PageTransition'
 import ScrollToTop from './components/ScrollToTop'
 import ShippingPolicy from './pages/ShippingPolicy';
@@ -48,6 +49,7 @@ const App = () => {
             <Route path='/orders' element={<PageTransition><Orders /></PageTransition>} />
             <Route path='/profile' element={<PageTransition><Profile /></PageTransition>} />
             <Route path='/verify' element={<PageTransition><Verify /></PageTransition>} />
+            <Route path='/wishlist' element={<PageTransition><Wishlist /></PageTransition>} />
             <Route path='/privacy-policy' element={<PageTransition><PrivacyPolicy /></PageTransition>} />
             <Route path='/terms-conditions' element={<PageTransition><TermsConditions /></PageTransition>} />
             <Route path='/shipping-policy' element={<PageTransition><ShippingPolicy /></PageTransition>} />

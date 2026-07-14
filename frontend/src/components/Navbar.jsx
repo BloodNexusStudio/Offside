@@ -2,12 +2,12 @@ import React, { useContext, useState, useEffect } from 'react'
 import {assets} from '../assets/assets'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { ShopContext } from '../context/ShopContext'
-import { Search, User, ShoppingBag, Menu, X, ChevronDown } from 'lucide-react'
+import { Search, User, ShoppingBag, Menu, X, ChevronDown, Heart } from 'lucide-react'
 
 const Navbar = () => {
 
     const [visible,setVisible] = useState(false);
-    const {setShowSearch , getCartCount , navigate, token, setToken, setCartItems} = useContext(ShopContext);
+    const {setShowSearch , getCartCount , navigate, token, setToken, setCartItems, favourites, setFavourites} = useContext(ShopContext);
     const [scrolled, setScrolled] = useState(false);
     const location = useLocation();
 
@@ -19,8 +19,11 @@ const Navbar = () => {
     const logout = () => {
         navigate('/login')
         localStorage.removeItem('token')
+        localStorage.removeItem('favourites')
+        localStorage.removeItem('cartItems')
         setToken('')
         setCartItems({})
+        if (setFavourites) setFavourites([])
     }
 
     // Scroll effect for dynamic styling
@@ -86,6 +89,11 @@ const Navbar = () => {
                         </div>}
                     </div> 
                     
+                    <Link to='/wishlist' className='relative'>
+                        <Heart className='w-[22px] h-[22px] stroke-[1.5] hover:opacity-60 transition-opacity' />
+                        <p className='absolute -right-1.5 -bottom-1.5 w-[18px] h-[18px] text-center leading-[18px] bg-offside-black text-white aspect-square rounded-full text-[10px] font-bold shadow-sm'>{favourites ? favourites.length : 0}</p>
+                    </Link>
+
                     <Link to='/cart' className='relative'>
                         <ShoppingBag className='w-[22px] h-[22px] stroke-[1.5] hover:opacity-60 transition-opacity' />
                         <p className='absolute -right-1.5 -bottom-1.5 w-[18px] h-[18px] text-center leading-[18px] bg-offside-black text-white aspect-square rounded-full text-[10px] font-bold shadow-sm'>{getCartCount()}</p>

@@ -24,12 +24,19 @@ const CollectionProductItem = ({ id, image, name, price, mainPrice }) => {
                 <div className='absolute top-4 left-4 bg-black text-white text-[10px] font-bold px-3 py-1 z-10 uppercase tracking-wider rounded-sm'>
                     NEW
                 </div>
-                <div 
+                <motion.div 
+                    whileTap={{ scale: 0.8 }}
                     className='absolute top-4 right-4 z-20 cursor-pointer' 
                     onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleFavourite(id); }}
                 >
-                    <Heart className={`w-5 h-5 transition-colors stroke-[1.5] ${favourites?.includes(id) ? 'fill-red-500 text-red-500 stroke-red-500' : 'text-white/70 hover:text-white'}`} />
-                </div>
+                    <motion.div
+                        initial={false}
+                        animate={favourites?.includes(id) ? { scale: [1, 1.2, 1] } : { scale: 1 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        <Heart className={`w-5 h-5 transition-colors stroke-[1.5] ${favourites?.includes(id) ? 'fill-red-500 text-red-500 stroke-red-500' : 'text-white/70 hover:text-white'}`} />
+                    </motion.div>
+                </motion.div>
 
                 {/* Bottom Gradient Overlay */}
                 <div className='absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none'></div>

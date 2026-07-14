@@ -5,11 +5,13 @@ import { assets } from '../assets/assets';
 import RelatedProducts from '../components/RelatedProducts';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { Heart } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Product = () => {
 
   const { productId } = useParams();
-  const { products, currency ,addToCart, token, backendUrl, navigate } = useContext(ShopContext);
+  const { products, currency ,addToCart, token, backendUrl, navigate, favourites, toggleFavourite } = useContext(ShopContext);
   const [productData, setProductData] = useState(false);
   const [image, setImage] = useState('')
   const [size,setSize] = useState('')
@@ -142,10 +144,26 @@ const Product = () => {
                 ))}
               </div>
           </div>
-          <button onClick={()=>{
-              const idToPass = selectedColor ? `${productData._id}_${selectedColor}` : productData._id;
-              addToCart(idToPass, size);
-          }} className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700'>ADD TO CART</button>
+          <div className='flex items-center gap-4'>
+              <button onClick={()=>{
+                  const idToPass = selectedColor ? `${productData._id}_${selectedColor}` : productData._id;
+                  addToCart(idToPass, size);
+              }} className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700 sm:min-w-[200px]'>ADD TO CART</button>
+              
+              <motion.button 
+                  whileTap={{ scale: 0.9 }}
+                  onClick={(e) => { e.preventDefault(); toggleFavourite(productData._id); }}
+                  className={`w-11 h-11 flex items-center justify-center border transition-all ${favourites?.includes(productData._id) ? 'border-red-500 bg-red-50' : 'border-gray-300 hover:border-offside-black bg-white shadow-sm'}`}
+              >
+                  <motion.div
+                      initial={false}
+                      animate={favourites?.includes(productData._id) ? { scale: [1, 1.2, 1] } : { scale: 1 }}
+                      transition={{ duration: 0.3 }}
+                  >
+                      <Heart className={`w-5 h-5 transition-colors stroke-[1.5] ${favourites?.includes(productData._id) ? 'fill-red-500 text-red-500 stroke-red-500' : 'text-gray-500'}`} />
+                  </motion.div>
+              </motion.button>
+          </div>
           <hr className='mt-8 sm:w-4/5' />
           <div className='text-sm text-gray-500 mt-5 flex flex-col gap-1'>
               <p>100% Original product.</p>
