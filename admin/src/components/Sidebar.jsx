@@ -3,9 +3,21 @@ import { NavLink } from 'react-router-dom'
 import { LayoutDashboard, PlusCircle, ListTodo, Package, Users, Star, Settings, CreditCard, Truck, Calculator, Activity } from 'lucide-react'
 import { assets } from '../assets/assets'
 
-const Sidebar = () => {
+const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   return (
-    <div className='flex flex-col w-64 min-h-screen border-r border-gray-200 bg-white'>
+    <>
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 z-40 bg-gray-900/80 backdrop-blur-sm lg:hidden" 
+          onClick={() => setSidebarOpen(false)} 
+        />
+      )}
+
+      <div className={`
+        fixed inset-y-0 left-0 z-50 flex flex-col w-64 min-h-screen border-r border-gray-200 bg-white transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+      `}>
         {/* Logo */}
         <div className="flex h-16 shrink-0 items-center border-b border-gray-200 px-6">
             <img className='h-6 w-auto' src={assets.logo} alt="OFFSIDE" />
@@ -20,25 +32,25 @@ const Sidebar = () => {
                     <h3 className="text-xs font-semibold text-gray-400 tracking-wider mb-3">OVERVIEW</h3>
                     <ul className="space-y-1">
                         <li>
-                            <NavLink to="/" end className={({ isActive }) => `group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium ${isActive ? 'bg-gray-100 text-offside-black' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}>
+                            <NavLink onClick={() => setSidebarOpen(false)} to="/" end className={({ isActive }) => `group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium ${isActive ? 'bg-gray-100 text-offside-black' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}>
                                 <LayoutDashboard className="h-5 w-5 shrink-0" />
                                 Dashboard
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to="/orders" className={({ isActive }) => `group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium ${isActive ? 'bg-gray-100 text-offside-black' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}>
+                            <NavLink onClick={() => setSidebarOpen(false)} to="/orders" className={({ isActive }) => `group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium ${isActive ? 'bg-gray-100 text-offside-black' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}>
                                 <Package className="h-5 w-5 shrink-0" />
                                 Orders
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to="/list" className={({ isActive }) => `group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium ${isActive ? 'bg-gray-100 text-offside-black' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}>
+                            <NavLink onClick={() => setSidebarOpen(false)} to="/list" className={({ isActive }) => `group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium ${isActive ? 'bg-gray-100 text-offside-black' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}>
                                 <ListTodo className="h-5 w-5 shrink-0" />
                                 Products
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to="/add" className={({ isActive }) => `group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium ${isActive ? 'bg-gray-100 text-offside-black' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}>
+                            <NavLink onClick={() => setSidebarOpen(false)} to="/add" className={({ isActive }) => `group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium ${isActive ? 'bg-gray-100 text-offside-black' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}>
                                 <PlusCircle className="h-5 w-5 shrink-0" />
                                 Add Product
                             </NavLink>
@@ -79,7 +91,7 @@ const Sidebar = () => {
                 </div>
             </div>
         </div>
-    </div>
+    </>
   )
 }
 
