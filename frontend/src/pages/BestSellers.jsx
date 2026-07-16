@@ -55,7 +55,7 @@ const BestSellers = () => {
     }
 
     if (category.length > 0) {
-      productsCopy = productsCopy.filter(item => category.includes(item.category));
+      productsCopy = productsCopy.filter(item => category.includes(item.category) || (category.includes('Unisex') && item.unisex));
     }
 
     if (subCategory.length > 0 ) {
@@ -114,7 +114,7 @@ const BestSellers = () => {
               Categories <span>—</span>
             </h3>
             <div className='flex flex-col gap-3'>
-              {['Men', 'Women'].map(cat => (
+              {['Men', 'Women', 'Unisex'].map(cat => (
                 <label key={cat} className='flex items-center gap-3 cursor-pointer group'>
                   <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${category.includes(cat) ? 'bg-offside-black border-offside-black' : 'border-gray-300 group-hover:border-gray-400'}`}>
                     {category.includes(cat) && <span className='w-2 h-2 bg-white rounded-sm'></span>}
@@ -132,7 +132,7 @@ const BestSellers = () => {
               Type <span>—</span>
             </h3>
             <div className='flex flex-col gap-3'>
-              {['Topwear', 'Bottomwear', 'Winterwear'].map(type => (
+              {['Topwear', 'Bottomwear'].map(type => (
                 <label key={type} className='flex items-center gap-3 cursor-pointer group'>
                   <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${subCategory.includes(type) ? 'bg-offside-black border-offside-black' : 'border-gray-300 group-hover:border-gray-400'}`}>
                     {subCategory.includes(type) && <span className='w-2 h-2 bg-white rounded-sm'></span>}

@@ -20,6 +20,7 @@ const Add = ({token}) => {
    const [fit, setFit] = useState("Regular Fit");
    const [bestseller, setBestseller] = useState(false);
    const [newDrop, setNewDrop] = useState(false);
+   const [unisex, setUnisex] = useState(false);
    const [sizes, setSizes] = useState([]);
 
    const handleColorImageChange = (colorIndex, imageIndex, file) => {
@@ -60,6 +61,7 @@ const Add = ({token}) => {
       formData.append("fit",fit)
       formData.append("bestseller",bestseller)
       formData.append("newDrop",newDrop)
+      formData.append("unisex",unisex)
       formData.append("sizes",JSON.stringify(sizes))
 
       // Append Color Data
@@ -94,6 +96,9 @@ const Add = ({token}) => {
         setColors([{ name: 'Default', images: [null, null, null, null, null, null] }])
         setPrice('')
         setMainPrice('')
+        setBestseller(false)
+        setNewDrop(false)
+        setUnisex(false)
       } else {
         toast.error(response.data.message)
       }
@@ -169,7 +174,6 @@ const Add = ({token}) => {
               <select onChange={(e) => setSubCategory(e.target.value)} className='w-full px-3 py-2'>
                   <option value="Topwear">Topwear</option>
                   <option value="Bottomwear">Bottomwear</option>
-                  <option value="Winterwear">Winterwear</option>
               </select>
             </div>
 
@@ -236,6 +240,10 @@ const Add = ({token}) => {
           <div className='flex gap-2 items-center'>
             <input onChange={() => setNewDrop(prev => !prev)} checked={newDrop} type="checkbox" id='newDrop' />
             <label className='cursor-pointer' htmlFor="newDrop">Featured in New Drops</label>
+          </div>
+          <div className='flex gap-2 items-center'>
+            <input onChange={() => setUnisex(prev => !prev)} checked={unisex} type="checkbox" id='unisex' />
+            <label className='cursor-pointer' htmlFor="unisex">Unisex Product</label>
           </div>
         </div>
 

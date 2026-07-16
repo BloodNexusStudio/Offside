@@ -67,6 +67,7 @@ const addProduct = async (req, res) => {
             productCollection: productCollection || "None",
             bestseller: bestseller === "true" ? true : false,
             newDrop: newDrop === "true" ? true : false,
+            unisex: unisex === "true" ? true : false,
             fit: fit || "Regular Fit",
             sizes: JSON.parse(sizes),
             image: globalImagesUrl,
@@ -90,7 +91,7 @@ const addProduct = async (req, res) => {
 // function for update product
 const updateProduct = async (req, res) => {
     try {
-        const { id, name, description, price, mainPrice, category, subCategory, productCollection, sizes, bestseller, newDrop, existingColors, fit } = req.body;
+        const { id, name, description, price, mainPrice, category, subCategory, productCollection, sizes, bestseller, newDrop, unisex, existingColors, fit } = req.body;
 
         const product = await productModel.findById(id);
         if (!product) {
@@ -142,6 +143,7 @@ const updateProduct = async (req, res) => {
             productCollection: productCollection || "None",
             bestseller: bestseller === "true" ? true : false,
             newDrop: newDrop === "true" ? true : false,
+            unisex: unisex === "true" ? true : false,
             fit: fit || "Regular Fit",
             sizes: JSON.parse(sizes),
             image: globalImagesUrl,
