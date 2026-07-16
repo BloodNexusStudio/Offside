@@ -25,6 +25,7 @@ const Edit = ({token}) => {
    const [bestseller, setBestseller] = useState(false);
    const [newDrop, setNewDrop] = useState(false);
    const [sizes, setSizes] = useState([]);
+   const [reviews, setReviews] = useState([]);
    const [loading, setLoading] = useState(true);
 
    useEffect(() => {
@@ -44,6 +45,7 @@ const Edit = ({token}) => {
                setBestseller(p.bestseller);
                setNewDrop(p.newDrop);
                setSizes(p.sizes);
+               setReviews(p.reviews || []);
                
                if (p.colors && p.colors.length > 0) {
                   const populatedColors = p.colors.map(c => {
@@ -149,6 +151,21 @@ const Edit = ({token}) => {
       console.log(error);
       toast.error(error.message)
     }
+   }
+
+   const deleteReviewHandler = async (reviewId) => {
+      try {
+         const response = await axios.post(backendUrl + "/api/product/review/delete", { productId: id, reviewId }, { headers: { token } });
+         if (response.data.success) {
+            toast.success("Review deleted");
+            setReviews(prev => prev.filter(r => r._id !== reviewId));
+         } else {
+            toast.error(response.data.message);
+         }
+      } catch (error) {
+         console.log(error);
+         toast.error(error.message);
+      }
    }
 
   if (loading) {
@@ -295,6 +312,24 @@ const Edit = ({token}) => {
             <label className='cursor-pointer' htmlFor="newDrop">Featured in New Drops</label>
           </div>
         </div>
+
+        {reviews && reviews.length > 0 && (
+            <div className="w-full mt-6">
+               <h3 className="text-lg font-bold mb-4 border-t pt-6">Product Reviews</h3>
+               <div className="flex flex-col gap-4">
+                  {reviews.map((rev) => (
+                     <div key={rev._id} className="border border-gray-200 p-4 rounded bg-white flex justify-between items-start gap-4">
+                        <div>
+                           <p className="font-bold text-sm">{rev.name}</p>
+                           <p className="text-xs text-yellow-500 mb-1">{"★".repeat(rev.rating)}</p>
+                           <p className="text-sm text-gray-700">{rev.text}</p>
+                        </div>
+                        <button type="button" onClick={() => deleteReviewHandler(rev._id)} className="text-red-500 text-xs font-bold border border-red-200 px-3 py-1 hover:bg-red-50">Delete</button>
+                     </div>
+                  ))}
+               </div>
+            </div>
+        )}
 
         <button type="submit" className='w-32 py-3 mt-4 bg-black text-white'>UPDATE</button>
 

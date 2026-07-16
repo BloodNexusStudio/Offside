@@ -1,5 +1,5 @@
 import express from 'express'
-import { listProducts, addProduct, removeProduct, singleProduct, addProductReview, updateProduct, getBestSellers, updateBestSellerStatus } from '../controllers/productController.js'
+import { listProducts, addProduct, removeProduct, singleProduct, addProductReview, updateProduct, getBestSellers, updateBestSellerStatus, deleteProductReview } from '../controllers/productController.js'
 import upload from '../middleware/multer.js';
 import adminAuth from '../middleware/adminAuth.js';
 import authUser from '../middleware/auth.js';
@@ -14,5 +14,6 @@ productRouter.get('/list',listProducts)
 productRouter.get('/best-sellers', getBestSellers)
 productRouter.patch('/:id/bestseller', adminAuth, updateBestSellerStatus)
 productRouter.post('/review', authUser, addProductReview);
+productRouter.post('/review/delete', adminAuth, deleteProductReview);
 
 export default productRouter

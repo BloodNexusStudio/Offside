@@ -263,4 +263,26 @@ const addProductReview = async (req, res) => {
     }
 }
 
-export { listProducts, addProduct, removeProduct, singleProduct, addProductReview, updateProduct, getBestSellers, updateBestSellerStatus }
+// function to delete product review (admin)
+const deleteProductReview = async (req, res) => {
+    try {
+        const { productId, reviewId } = req.body;
+        const product = await productModel.findById(productId);
+
+        if (!product) {
+            return res.json({ success: false, message: "Product not found" });
+        }
+
+        product.reviews = product.reviews.filter(
+            (rev) => rev._id.toString() !== reviewId
+        );
+
+        await product.save();
+        res.json({ success: true, message: "Review deleted successfully" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
+export { listProducts, addProduct, removeProduct, singleProduct, addProductReview, updateProduct, getBestSellers, updateBestSellerStatus, deleteProductReview }
