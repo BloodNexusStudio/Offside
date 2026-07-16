@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { ShopContext } from '../context/ShopContext';
 import { assets } from '../assets/assets';
 import RelatedProducts from '../components/RelatedProducts';
+import SEO from '../components/SEO';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Heart } from 'lucide-react';
@@ -81,12 +82,39 @@ const Product = () => {
       averageRating = Math.round(sum / reviewsCount);
   }
 
+  const productSchema = productData ? {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": productData.name,
+    "image": productData.image,
+    "description": productData.description,
+    "sku": productData._id,
+    "brand": {
+      "@type": "Brand",
+      "name": "Offside"
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": window.location.href,
+      "priceCurrency": "INR",
+      "price": productData.price,
+      "availability": "https://schema.org/InStock"
+    }
+  } : null;
+
   const currentImages = (productData.colors && productData.colors.length > 0 && selectedColor)
      ? productData.colors.find(c => c.colorName === selectedColor)?.images || productData.image
      : productData.image;
 
   return productData ? (
     <div className='border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100'>
+      <SEO 
+        title={productData.name}
+        description={productData.description}
+        image={productData.image[0]}
+        schema={productSchema}
+        type="product"
+      />
       {/*----------- Product Data-------------- */}
       <div className='flex gap-12 sm:gap-12 flex-col sm:flex-row'>
 

@@ -36,7 +36,8 @@ const ProductItem = ({ id, image, name, price, mainPrice }) => {
                     transition={{ duration: 0.5, ease: "easeOut" }}
                     className='w-full h-full object-cover mix-blend-multiply' 
                     src={image[0]} 
-                    alt={name} 
+                    alt={name}
+                    loading="lazy"
                 />
             </div>
             

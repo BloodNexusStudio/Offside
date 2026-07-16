@@ -1,11 +1,16 @@
 import React from 'react'
 import Title from '../components/Title'
 import { assets } from '../assets/assets'
+import NewsletterBox from '../components/NewsletterBox'
+import SEO from '../components/SEO'
 
 const Contact = () => {
   return (
     <div>
-      
+      <SEO 
+        title="Contact Us"
+        description="Get in touch with the Offside team for support, collaborations, or inquiries."
+      />
       <div className='text-center text-2xl pt-10 border-t'>
           <Title text1={'CONTACT'} text2={'US'} />
       </div>

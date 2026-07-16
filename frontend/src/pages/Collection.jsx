@@ -3,6 +3,7 @@ import { ShopContext } from '../context/ShopContext'
 import { assets } from '../assets/assets';
 import CollectionProductItem from '../components/CollectionProductItem';
 import { RefreshCw, SlidersHorizontal } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const Collection = () => {
 
@@ -96,6 +97,10 @@ const Collection = () => {
 
   return (
     <div className='w-full'>
+      <SEO 
+        title="All Collections"
+        description="Shop the entire Offside collection. Minimal, unapologetic, and timeless streetwear crafted from premium 100% cotton."
+      />
       <div className='max-w-[1600px] mx-auto px-4 sm:px-8 py-10 flex flex-col lg:flex-row gap-10'>
         
         {/* Left Sidebar (Filters) */}
