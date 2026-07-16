@@ -139,9 +139,21 @@ const Product = () => {
           <div className={`flex flex-col gap-4 ${productData.colors && productData.colors.length > 0 ? 'my-4' : 'my-8'}`}>
               <p>Select Size</p>
               <div className='flex gap-2 flex-wrap'>
-                {productData.sizes.map((item,index)=>(
-                  <button onClick={()=>setSize(item)} className={`border py-2 px-4 bg-gray-100 ${item === size ? 'border-orange-500' : ''}`} key={index}>{item}</button>
-                ))}
+                {
+                  [...productData.sizes]
+                    .sort((a, b) => {
+                      const order = ['S', 'M', 'L', 'XL', 'XXL', 'Free Size'];
+                      let indexA = order.indexOf(a);
+                      let indexB = order.indexOf(b);
+                      // If a size isn't in the predefined list, put it at the end
+                      if (indexA === -1) indexA = 999;
+                      if (indexB === -1) indexB = 999;
+                      return indexA - indexB;
+                    })
+                    .map((item,index)=>(
+                      <button onClick={()=>setSize(item)} className={`border py-2 px-4 bg-gray-100 ${item === size ? 'border-orange-500' : ''}`} key={index}>{item}</button>
+                  ))
+                }
               </div>
           </div>
           <div className='flex items-center gap-4'>
