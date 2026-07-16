@@ -2,7 +2,8 @@ import React from 'react'
 import Hero from '../components/Hero'
 import FeaturesBanner from '../components/FeaturesBanner'
 import CollectionsSection from '../components/CollectionsSection'
-import BestSeller from '../components/BestSeller'
+import NewDrops from '../components/NewDrops'
+import BestSellerSection from '../components/BestSellerSection'
 import CultSection from '../components/CultSection'
 import Footer from '../components/Footer'
 
@@ -12,7 +13,8 @@ const Home = () => {
       <Hero />
       <FeaturesBanner />
       <CollectionsSection />
-      <BestSeller />
+      <NewDrops />
+      <BestSellerSection />
       <CultSection />
     </div>
   )

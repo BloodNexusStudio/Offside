@@ -11,6 +11,7 @@ const productSchema = new mongoose.Schema({
     productCollection: { type: String, default: "None" },
     sizes: { type: Array, required: true },
     bestseller: { type: Boolean },
+    newDrop: { type: Boolean, default: false },
     fit: { type: String, default: "Regular Fit" },
     colors: { type: Array, default: [] },
     date: { type: Number, required: true },

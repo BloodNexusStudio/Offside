@@ -23,6 +23,7 @@ const Edit = ({token}) => {
    const [productCollection, setProductCollection] = useState("None");
    const [fit, setFit] = useState("Regular Fit");
    const [bestseller, setBestseller] = useState(false);
+   const [newDrop, setNewDrop] = useState(false);
    const [sizes, setSizes] = useState([]);
    const [loading, setLoading] = useState(true);
 
@@ -41,6 +42,7 @@ const Edit = ({token}) => {
                setProductCollection(p.productCollection);
                setFit(p.fit);
                setBestseller(p.bestseller);
+               setNewDrop(p.newDrop);
                setSizes(p.sizes);
                
                if (p.colors && p.colors.length > 0) {
@@ -103,6 +105,7 @@ const Edit = ({token}) => {
       formData.append("productCollection",productCollection)
       formData.append("fit",fit)
       formData.append("bestseller",bestseller)
+      formData.append("newDrop",newDrop)
       formData.append("sizes",JSON.stringify(sizes))
 
       // Append Existing Colors Data (urls vs new files)
@@ -282,9 +285,15 @@ const Edit = ({token}) => {
           </div>
         </div>
 
-        <div className='flex gap-2 mt-2'>
-          <input onChange={() => setBestseller(prev => !prev)} checked={bestseller} type="checkbox" id='bestseller' />
-          <label className='cursor-pointer' htmlFor="bestseller">Add to bestseller</label>
+        <div className='flex flex-col gap-2 mt-2'>
+          <div className='flex gap-2 items-center'>
+            <input onChange={() => setBestseller(prev => !prev)} checked={bestseller} type="checkbox" id='bestseller' />
+            <label className='cursor-pointer' htmlFor="bestseller">Featured in Best Sellers</label>
+          </div>
+          <div className='flex gap-2 items-center'>
+            <input onChange={() => setNewDrop(prev => !prev)} checked={newDrop} type="checkbox" id='newDrop' />
+            <label className='cursor-pointer' htmlFor="newDrop">Featured in New Drops</label>
+          </div>
         </div>
 
         <button type="submit" className='w-32 py-3 mt-4 bg-black text-white'>UPDATE</button>

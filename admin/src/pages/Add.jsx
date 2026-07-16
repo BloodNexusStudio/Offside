@@ -19,6 +19,7 @@ const Add = ({token}) => {
    const [productCollection, setProductCollection] = useState("None");
    const [fit, setFit] = useState("Regular Fit");
    const [bestseller, setBestseller] = useState(false);
+   const [newDrop, setNewDrop] = useState(false);
    const [sizes, setSizes] = useState([]);
 
    const handleColorImageChange = (colorIndex, imageIndex, file) => {
@@ -58,6 +59,7 @@ const Add = ({token}) => {
       formData.append("productCollection",productCollection)
       formData.append("fit",fit)
       formData.append("bestseller",bestseller)
+      formData.append("newDrop",newDrop)
       formData.append("sizes",JSON.stringify(sizes))
 
       // Append Color Data
@@ -226,9 +228,15 @@ const Add = ({token}) => {
           </div>
         </div>
 
-        <div className='flex gap-2 mt-2'>
-          <input onChange={() => setBestseller(prev => !prev)} checked={bestseller} type="checkbox" id='bestseller' />
-          <label className='cursor-pointer' htmlFor="bestseller">Add to bestseller</label>
+        <div className='flex flex-col gap-2 mt-2'>
+          <div className='flex gap-2 items-center'>
+            <input onChange={() => setBestseller(prev => !prev)} checked={bestseller} type="checkbox" id='bestseller' />
+            <label className='cursor-pointer' htmlFor="bestseller">Featured in Best Sellers</label>
+          </div>
+          <div className='flex gap-2 items-center'>
+            <input onChange={() => setNewDrop(prev => !prev)} checked={newDrop} type="checkbox" id='newDrop' />
+            <label className='cursor-pointer' htmlFor="newDrop">Featured in New Drops</label>
+          </div>
         </div>
 
         <button type="submit" className='w-28 py-3 mt-4 bg-black text-white'>ADD</button>

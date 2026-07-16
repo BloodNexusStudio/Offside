@@ -6,7 +6,7 @@ import userModel from "../models/userModel.js"
 const addProduct = async (req, res) => {
     try {
 
-        const { name, description, price, mainPrice, category, subCategory, productCollection, sizes, bestseller, colorsData, fit } = req.body
+        const { name, description, price, mainPrice, category, subCategory, productCollection, sizes, bestseller, newDrop, colorsData, fit } = req.body
 
         let parsedColorsData = [];
         if (colorsData) {
@@ -66,6 +66,7 @@ const addProduct = async (req, res) => {
             subCategory,
             productCollection: productCollection || "None",
             bestseller: bestseller === "true" ? true : false,
+            newDrop: newDrop === "true" ? true : false,
             fit: fit || "Regular Fit",
             sizes: JSON.parse(sizes),
             image: globalImagesUrl,
@@ -89,7 +90,7 @@ const addProduct = async (req, res) => {
 // function for update product
 const updateProduct = async (req, res) => {
     try {
-        const { id, name, description, price, mainPrice, category, subCategory, productCollection, sizes, bestseller, existingColors, fit } = req.body;
+        const { id, name, description, price, mainPrice, category, subCategory, productCollection, sizes, bestseller, newDrop, existingColors, fit } = req.body;
 
         const product = await productModel.findById(id);
         if (!product) {
@@ -140,6 +141,7 @@ const updateProduct = async (req, res) => {
             subCategory,
             productCollection: productCollection || "None",
             bestseller: bestseller === "true" ? true : false,
+            newDrop: newDrop === "true" ? true : false,
             fit: fit || "Regular Fit",
             sizes: JSON.parse(sizes),
             image: globalImagesUrl,
@@ -165,6 +167,38 @@ const listProducts = async (req, res) => {
     } catch (error) {
         console.log(error)
         res.json({ success: false, message: error.message })
+    }
+}
+
+// function for getting best sellers
+const getBestSellers = async (req, res) => {
+    try {
+        const limit = req.query.limit ? parseInt(req.query.limit) : 0;
+        
+        let query = productModel.find({ bestseller: true });
+        if (limit > 0) {
+            query = query.limit(limit);
+        }
+        
+        const products = await query;
+        res.json({ success: true, products });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
+// function for updating just bestseller status
+const updateBestSellerStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { bestseller } = req.body;
+
+        await productModel.findByIdAndUpdate(id, { bestseller });
+        res.json({ success: true, message: "Best Seller status updated" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
     }
 }
 
@@ -229,4 +263,4 @@ const addProductReview = async (req, res) => {
     }
 }
 
-export { listProducts, addProduct, removeProduct, singleProduct, addProductReview, updateProduct }
+export { listProducts, addProduct, removeProduct, singleProduct, addProductReview, updateProduct, getBestSellers, updateBestSellerStatus }
