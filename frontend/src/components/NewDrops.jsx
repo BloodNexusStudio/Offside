@@ -15,9 +15,9 @@ const NewDrops = () => {
     const gridRef = useRef(null);
 
     useEffect(() => {
-        // Filter by newDrop flag and get top 4
-        const drops = products.filter(item => item.newDrop);
-        setNewDrops(drops.slice(0, 4));
+        // Automatically fetch the 4 latest products by date
+        const recentProducts = [...products].sort((a, b) => b.date - a.date);
+        setNewDrops(recentProducts.slice(0, 4));
     }, [products])
 
     useEffect(() => {

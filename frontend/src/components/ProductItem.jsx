@@ -45,13 +45,6 @@ const ProductItem = ({ id, image, name, price, mainPrice }) => {
                 {mainPrice > 0 && <p className='text-[13px] font-medium text-gray-400 line-through'>{currency}{mainPrice}</p>}
                 <p className='text-[13px] font-bold text-gray-800'>{currency}{price}</p>
             </div>
-            
-            {/* Color Swatches */}
-            <div className="flex items-center gap-2 mt-1">
-                <div className="w-2.5 h-2.5 rounded-full bg-offside-black shadow-sm"></div>
-                <div className="w-2.5 h-2.5 rounded-full bg-gray-300 shadow-sm"></div>
-                <div className="w-2.5 h-2.5 rounded-full bg-white shadow-sm border border-gray-200"></div>
-            </div>
         </Link>
     )
 }

@@ -49,13 +49,6 @@ const CollectionProductItem = ({ id, image, name, price, mainPrice }) => {
                             {mainPrice > 0 && <p className='text-[11px] sm:text-xs font-medium text-gray-400 line-through'>{currency}{mainPrice.toLocaleString('en-IN')}</p>}
                             <p className='text-[11px] sm:text-xs font-medium text-white'>{currency}{price.toLocaleString('en-IN')}</p>
                         </div>
-                        
-                        {/* Color Swatches */}
-                        <div className="flex items-center gap-2">
-                            <div className="w-2.5 h-2.5 rounded-full bg-transparent border-[1.5px] border-white/50 cursor-pointer hover:border-white transition-colors"></div>
-                            <div className="w-2.5 h-2.5 rounded-full bg-white/20 border border-transparent cursor-pointer hover:bg-white/40 transition-colors"></div>
-                            <div className="w-2.5 h-2.5 rounded-full bg-white/40 border border-transparent cursor-pointer hover:bg-white/60 transition-colors"></div>
-                        </div>
                     </div>
 
                     {/* Plus Button */}
