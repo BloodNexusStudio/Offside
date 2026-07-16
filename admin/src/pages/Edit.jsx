@@ -168,6 +168,68 @@ const Edit = ({token}) => {
       }
    }
 
+   const [replyingTo, setReplyingTo] = useState(null);
+   const [replyText, setReplyText] = useState("");
+
+   const adminReplyHandler = async (e, reviewId) => {
+      e.preventDefault();
+      try {
+         const response = await axios.post(backendUrl + "/api/product/review/reply/admin", {
+            productId: id,
+            reviewId,
+            text: replyText,
+            name: "Admin",
+            isAdmin: true
+         }, { headers: { token } });
+         
+         if (response.data.success) {
+            toast.success("Reply submitted");
+            setReplyText('');
+            setReplyingTo(null);
+            
+            // Optimistically update
+            setReviews(prev => {
+                const newReviews = [...prev];
+                const rIndex = newReviews.findIndex(r => r._id === reviewId);
+                if (rIndex !== -1) {
+                    newReviews[rIndex].replies = [
+                        ...(newReviews[rIndex].replies || []), 
+                        { _id: Math.random().toString(), name: "Admin", text: replyText, date: Date.now(), isAdmin: true }
+                    ];
+                }
+                return newReviews;
+            });
+         } else {
+            toast.error(response.data.message);
+         }
+      } catch (error) {
+         console.log(error);
+         toast.error(error.message);
+      }
+   }
+
+   const deleteReplyHandler = async (reviewId, replyId) => {
+      try {
+         const response = await axios.post(backendUrl + "/api/product/review/reply/delete", { productId: id, reviewId, replyId }, { headers: { token } });
+         if (response.data.success) {
+            toast.success("Reply deleted");
+            setReviews(prev => {
+                const newReviews = [...prev];
+                const rIndex = newReviews.findIndex(r => r._id === reviewId);
+                if (rIndex !== -1 && newReviews[rIndex].replies) {
+                    newReviews[rIndex].replies = newReviews[rIndex].replies.filter(rep => rep._id !== replyId);
+                }
+                return newReviews;
+            });
+         } else {
+            toast.error(response.data.message);
+         }
+      } catch (error) {
+         console.log(error);
+         toast.error(error.message);
+      }
+   }
+
   if (loading) {
     return <div className="p-8 text-center text-gray-500">Loading product data...</div>
   }
@@ -318,13 +380,55 @@ const Edit = ({token}) => {
                <h3 className="text-lg font-bold mb-4 border-t pt-6">Product Reviews</h3>
                <div className="flex flex-col gap-4">
                   {reviews.map((rev) => (
-                     <div key={rev._id} className="border border-gray-200 p-4 rounded bg-white flex justify-between items-start gap-4">
-                        <div>
-                           <p className="font-bold text-sm">{rev.name}</p>
-                           <p className="text-xs text-yellow-500 mb-1">{"★".repeat(rev.rating)}</p>
-                           <p className="text-sm text-gray-700">{rev.text}</p>
+                     <div key={rev._id} className="border border-gray-200 p-4 rounded bg-white flex flex-col gap-4">
+                        <div className="flex justify-between items-start gap-4 border-b border-gray-100 pb-4">
+                           <div>
+                              <p className="font-bold text-sm">{rev.name}</p>
+                              <p className="text-xs text-yellow-500 mb-1">{"★".repeat(rev.rating)}</p>
+                              <p className="text-sm text-gray-700">{rev.text}</p>
+                           </div>
+                           <div className="flex flex-col gap-2">
+                               <button type="button" onClick={() => deleteReviewHandler(rev._id)} className="text-red-500 text-xs font-bold border border-red-200 px-3 py-1 hover:bg-red-50">Delete</button>
+                               <button type="button" onClick={() => { setReplyingTo(rev._id); setReplyText(''); }} className="text-blue-500 text-xs font-bold border border-blue-200 px-3 py-1 hover:bg-blue-50">Reply</button>
+                           </div>
                         </div>
-                        <button type="button" onClick={() => deleteReviewHandler(rev._id)} className="text-red-500 text-xs font-bold border border-red-200 px-3 py-1 hover:bg-red-50">Delete</button>
+
+                        {/* Admin Reply Input */}
+                        {replyingTo === rev._id && (
+                            <form onSubmit={(e) => adminReplyHandler(e, rev._id)} className="flex flex-col gap-2">
+                                <textarea 
+                                    required
+                                    value={replyText}
+                                    onChange={(e) => setReplyText(e.target.value)}
+                                    placeholder="Write an admin reply..."
+                                    className="border border-gray-300 p-2 text-xs focus:outline-none focus:border-black w-full min-h-[60px]"
+                                ></textarea>
+                                <div className="flex gap-2">
+                                    <button type="submit" className="bg-black text-white px-4 py-2 font-bold text-[10px] uppercase tracking-widest hover:opacity-80">Post Reply</button>
+                                    <button type="button" onClick={() => setReplyingTo(null)} className="bg-gray-100 text-black px-4 py-2 font-bold text-[10px] uppercase tracking-widest hover:bg-gray-200">Cancel</button>
+                                </div>
+                            </form>
+                        )}
+
+                        {/* Display Replies */}
+                        {rev.replies && rev.replies.length > 0 && (
+                            <div className="pl-6 border-l-2 border-gray-100 flex flex-col gap-3">
+                                {rev.replies.map((reply, rIndex) => (
+                                    <div key={rIndex} className="flex justify-between items-start gap-4">
+                                        <div>
+                                            <div className="flex items-center gap-2">
+                                                <p className="font-bold text-sm">{reply.name}</p>
+                                                {reply.isAdmin && (
+                                                    <span className="bg-black text-white text-[9px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-widest">Admin</span>
+                                                )}
+                                            </div>
+                                            <p className="text-xs text-gray-700 mt-1">{reply.text}</p>
+                                        </div>
+                                        <button type="button" onClick={() => deleteReplyHandler(rev._id, reply._id)} className="text-red-500 text-[10px] font-bold hover:underline">Delete</button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                      </div>
                   ))}
                </div>

@@ -285,4 +285,65 @@ const deleteProductReview = async (req, res) => {
     }
 }
 
-export { listProducts, addProduct, removeProduct, singleProduct, addProductReview, updateProduct, getBestSellers, updateBestSellerStatus, deleteProductReview }
+// function to add a reply to a review
+const addReviewReply = async (req, res) => {
+    try {
+        const { productId, reviewId, text, name, isAdmin } = req.body;
+        const userId = req.body.userId; // Will come from auth middleware if user, or we inject it
+
+        const product = await productModel.findById(productId);
+        if (!product) {
+            return res.json({ success: false, message: "Product not found" });
+        }
+
+        const reviewIndex = product.reviews.findIndex(rev => rev._id.toString() === reviewId);
+        if (reviewIndex === -1) {
+            return res.json({ success: false, message: "Review not found" });
+        }
+
+        const newReply = {
+            userId: userId || 'admin',
+            name: name,
+            text,
+            date: Date.now(),
+            isAdmin: isAdmin || false
+        };
+
+        product.reviews[reviewIndex].replies.push(newReply);
+        await product.save();
+
+        res.json({ success: true, message: "Reply added successfully" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
+// function to delete a reply
+const deleteReviewReply = async (req, res) => {
+    try {
+        const { productId, reviewId, replyId } = req.body;
+        const product = await productModel.findById(productId);
+
+        if (!product) {
+            return res.json({ success: false, message: "Product not found" });
+        }
+
+        const reviewIndex = product.reviews.findIndex(rev => rev._id.toString() === reviewId);
+        if (reviewIndex === -1) {
+            return res.json({ success: false, message: "Review not found" });
+        }
+
+        product.reviews[reviewIndex].replies = product.reviews[reviewIndex].replies.filter(
+            reply => reply._id.toString() !== replyId
+        );
+
+        await product.save();
+        res.json({ success: true, message: "Reply deleted successfully" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+}
+
+export { listProducts, addProduct, removeProduct, singleProduct, addProductReview, updateProduct, getBestSellers, updateBestSellerStatus, deleteProductReview, addReviewReply, deleteReviewReply }

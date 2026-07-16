@@ -20,7 +20,14 @@ const productSchema = new mongoose.Schema({
         name: { type: String, required: true },
         rating: { type: Number, required: true },
         text: { type: String, required: true },
-        date: { type: Number, required: true }
+        date: { type: Number, required: true },
+        replies: [{
+            userId: { type: String, required: true },
+            name: { type: String, required: true },
+            text: { type: String, required: true },
+            date: { type: Number, required: true },
+            isAdmin: { type: Boolean, default: false }
+        }]
     }]
 })
 

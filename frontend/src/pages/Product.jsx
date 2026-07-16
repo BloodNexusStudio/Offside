@@ -21,6 +21,9 @@ const Product = () => {
   const [rating, setRating] = useState(5)
   const [reviewText, setReviewText] = useState('')
 
+  const [replyingTo, setReplyingTo] = useState(null)
+  const [replyText, setReplyText] = useState('')
+
   const fetchProductData = async () => {
     products.map((item) => {
       if (item._id === productId) {
@@ -52,13 +55,50 @@ const Product = () => {
         if (response.data.success) {
             toast.success("Review submitted successfully");
             setReviewText('');
-            // Optimistically update the productData to show the new review
-            // Since we need the user name which we don't have here perfectly, we can just trigger a reload of products or a manual addition
-            // But since 'products' comes from context, ideally we'd refresh the context, but for now we'll just push a temporary one
             setProductData(prev => ({
                 ...prev,
-                reviews: [...(prev.reviews || []), { name: "You", rating, text: reviewText, date: Date.now() }]
+                reviews: [...(prev.reviews || []), { name: "You", rating, text: reviewText, date: Date.now(), replies: [] }]
             }))
+        } else {
+            toast.error(response.data.message);
+        }
+    } catch (error) {
+        console.log(error);
+        toast.error(error.message);
+    }
+  }
+
+  const onSubmitReply = async (e, reviewId) => {
+    e.preventDefault();
+    if (!token) {
+        toast.error("Please login to submit a reply");
+        return;
+    }
+    try {
+        const response = await axios.post(backendUrl + '/api/product/review/reply', {
+            productId: productData._id,
+            reviewId,
+            text: replyText,
+            name: "You"
+        }, { headers: { token } });
+
+        if (response.data.success) {
+            toast.success("Reply submitted successfully");
+            setReplyText('');
+            setReplyingTo(null);
+            
+            // Optimistically update
+            setProductData(prev => {
+                const newReviews = [...prev.reviews];
+                const reviewIndex = newReviews.findIndex(r => r._id === reviewId);
+                if (reviewIndex !== -1) {
+                    newReviews[reviewIndex].replies = [
+                        ...(newReviews[reviewIndex].replies || []), 
+                        { name: "You", text: replyText, date: Date.now(), isAdmin: false }
+                    ];
+                }
+                return { ...prev, reviews: newReviews };
+            })
         } else {
             toast.error(response.data.message);
         }
@@ -222,6 +262,52 @@ const Product = () => {
                                       </div>
                                   </div>
                                   <p className="text-gray-600 mt-2">{review.text}</p>
+
+                                  <div className="mt-2 flex items-center gap-4">
+                                      <button 
+                                        onClick={() => { setReplyingTo(review._id); setReplyText(''); }} 
+                                        className="text-xs font-bold text-gray-500 hover:text-offside-black uppercase tracking-widest"
+                                      >
+                                          Reply
+                                      </button>
+                                  </div>
+
+                                  {/* Replies Section */}
+                                  {review.replies && review.replies.length > 0 && (
+                                      <div className="mt-4 pl-6 sm:pl-10 border-l-2 border-gray-100 flex flex-col gap-4">
+                                          {review.replies.map((reply, rIndex) => (
+                                              <div key={rIndex} className="flex flex-col gap-1">
+                                                  <div className="flex items-center gap-2">
+                                                      <p className="font-bold text-offside-black text-xs sm:text-sm">{reply.name}</p>
+                                                      {reply.isAdmin && (
+                                                          <span className="bg-offside-black text-white text-[9px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-widest">Admin</span>
+                                                      )}
+                                                      <span className="text-[10px] text-gray-400">{new Date(reply.date).toLocaleDateString()}</span>
+                                                  </div>
+                                                  <p className="text-gray-600 text-xs sm:text-sm">{reply.text}</p>
+                                              </div>
+                                          ))}
+                                      </div>
+                                  )}
+
+                                  {/* Reply Input Form */}
+                                  {replyingTo === review._id && (
+                                      <div className="mt-4 pl-6 sm:pl-10">
+                                          <form onSubmit={(e) => onSubmitReply(e, review._id)} className="flex flex-col gap-2">
+                                              <textarea 
+                                                required
+                                                value={replyText}
+                                                onChange={(e) => setReplyText(e.target.value)}
+                                                placeholder="Write a reply..."
+                                                className="border border-gray-300 p-2 text-xs focus:outline-none focus:border-offside-black w-full max-w-lg min-h-[60px]"
+                                              ></textarea>
+                                              <div className="flex gap-2">
+                                                <button type="submit" className="bg-offside-black text-white px-4 py-2 font-bold text-[10px] uppercase tracking-widest hover:opacity-80 transition-opacity">Post Reply</button>
+                                                <button type="button" onClick={() => setReplyingTo(null)} className="bg-gray-100 text-offside-black px-4 py-2 font-bold text-[10px] uppercase tracking-widest hover:bg-gray-200 transition-colors">Cancel</button>
+                                              </div>
+                                          </form>
+                                      </div>
+                                  )}
                               </div>
                           ))}
                       </div>
