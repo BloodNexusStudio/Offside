@@ -8,10 +8,10 @@
   body {
     @apply text-offside-black antialiased selection:bg-offside-black selection:text-white overflow-x-hidden;
     font-family: 'Inter', sans-serif;
-    background-image: url('/grunge_bg.png');
+    background-image: url('/images/texture.png');
     background-repeat: repeat;
     background-attachment: fixed;
-    background-size: 800px;
+    background-size: cover;
   }
 }
 
