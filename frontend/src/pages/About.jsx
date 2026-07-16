@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Lightbulb, Target, Star, Diamond, Hourglass, Zap, Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Title from '../components/Title'
-import NewsletterBox from '../components/NewsletterBox'
 import SEO from '../components/SEO';
 import { assets } from '../assets/assets';
 import gsap from 'gsap';
