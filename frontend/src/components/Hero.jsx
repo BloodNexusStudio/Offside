@@ -62,7 +62,7 @@ const Hero = () => {
             
             <p className="text-sm sm:text-base font-medium text-gray-800 max-w-sm mb-8 leading-relaxed">
               Oversized. Minimal. Unapologetic.<br/>
-              Crafted from 240 GSM premium cotton <br/>
+              Crafted from premium cotton <br/>
               for all-day comfort and attitude.
             </p>
             
@@ -78,8 +78,8 @@ const Hero = () => {
                 <div className="flex items-center gap-3">
                     <Box className="w-5 h-5 sm:w-6 sm:h-6 stroke-[1.5] text-offside-black" />
                     <div>
-                        <h4 className="text-[10px] sm:text-xs font-bold uppercase">240 GSM</h4>
-                        <p className="text-[10px] text-gray-500 font-medium">Premium Cotton</p>
+                        <h4 className="text-[10px] sm:text-xs font-bold uppercase">100% Cotton</h4>
+                        <p className="text-[10px] text-gray-500 font-medium">Premium Quality</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
