@@ -8,8 +8,14 @@
   body {
     @apply text-offside-black antialiased selection:bg-offside-black selection:text-white overflow-x-hidden;
     font-family: 'Inter', sans-serif;
-    background-image: url('/images/texture.png');
-    background-repeat: repeat;
+    background: radial-gradient(
+      circle at center,
+      #ffffff 0%,
+      #fafafa 40%,
+      #f2f2f2 70%,
+      #ebebeb 100%
+    );
+    background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
   }
