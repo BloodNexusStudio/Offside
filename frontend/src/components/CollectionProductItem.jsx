@@ -17,8 +17,7 @@ const CollectionProductItem = ({ id, image, name, price, mainPrice }) => {
                     transition={{ duration: 0.7, ease: "easeOut" }}
                     className='w-full h-full object-cover opacity-90' 
                     src={image[0]} 
-                    alt={name}
-                    loading="lazy"
+                    alt={name} 
                 />
 
                 {/* Top Badges */}

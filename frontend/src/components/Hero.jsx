@@ -107,7 +107,6 @@ const Hero = () => {
             src="/hero_model_back.jpeg" 
             alt="Hero Model" 
             className="w-full h-full object-cover"
-            fetchpriority="high"
           />
           
 

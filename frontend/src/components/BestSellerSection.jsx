@@ -55,7 +55,15 @@ const BestSellerSection = () => {
     }, [bestSellers]);
 
     if (bestSellers.length === 0) {
-        return null;
+        return (
+            <section ref={sectionRef} className="w-full py-12 px-6 sm:px-12 bg-gray-50/30">
+                <div className="max-w-[1400px] mx-auto text-center py-20">
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Most Loved</p>
+                    <h2 className="text-3xl sm:text-4xl font-heading font-bold text-gray-300 uppercase mb-4">No Best Sellers Yet</h2>
+                    <p className="text-gray-500 text-sm">Head over to the Admin Panel and check "Featured in Best Sellers" on a product.</p>
+                </div>
+            </section>
+        );
     }
 
     return (

@@ -2,8 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Lightbulb, Target, Star, Diamond, Hourglass, Zap, Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import Title from '../components/Title'
-import SEO from '../components/SEO';
 import { assets } from '../assets/assets';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';

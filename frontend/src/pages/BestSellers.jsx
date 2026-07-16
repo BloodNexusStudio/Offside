@@ -3,7 +3,6 @@ import { ShopContext } from '../context/ShopContext'
 import { assets } from '../assets/assets';
 import CollectionProductItem from '../components/CollectionProductItem';
 import { RefreshCw, SlidersHorizontal } from 'lucide-react';
-import SEO from '../components/SEO';
 
 const BestSellers = () => {
 
@@ -97,10 +96,6 @@ const BestSellers = () => {
 
   return (
     <div className='w-full'>
-      <SEO 
-        title="Best Sellers"
-        description="Shop our most loved and highest rated premium streetwear pieces. Offside best sellers."
-      />
       <div className='max-w-[1600px] mx-auto px-4 sm:px-8 py-10 flex flex-col lg:flex-row gap-10'>
         
         {/* Left Sidebar (Filters) */}
