@@ -23,6 +23,7 @@ import Wishlist from './pages/Wishlist'
 import PageTransition from './components/PageTransition'
 import ScrollToTop from './components/ScrollToTop'
 import ShippingPolicy from './pages/ShippingPolicy';
+import CustomCursor from './components/CustomCursor'
 
 import Chatbot from './components/Chatbot';
 
@@ -31,6 +32,7 @@ const App = () => {
 
   return (
     <div className='min-h-screen flex flex-col'>
+      <CustomCursor />
       <ScrollToTop />
       <ToastContainer />
       <Navbar />
