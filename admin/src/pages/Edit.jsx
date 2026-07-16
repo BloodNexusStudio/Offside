@@ -1,10 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {assets} from '../assets/assets'
 import axios from 'axios'
 import { backendUrl } from '../App'
 import { toast } from 'react-toastify'
+import { useParams, useNavigate } from 'react-router-dom'
 
-const Add = ({token}) => {
+const Edit = ({token}) => {
+
+   const { id } = useParams();
+   const navigate = useNavigate();
 
    const [colors, setColors] = useState([
      { name: 'Default', images: [null, null, null, null, null, null] }
@@ -20,6 +24,46 @@ const Add = ({token}) => {
    const [fit, setFit] = useState("Regular Fit");
    const [bestseller, setBestseller] = useState(false);
    const [sizes, setSizes] = useState([]);
+   const [loading, setLoading] = useState(true);
+
+   useEffect(() => {
+      const fetchProduct = async () => {
+         try {
+            const response = await axios.post(backendUrl + '/api/product/single', { productId: id });
+            if (response.data.success) {
+               const p = response.data.product;
+               setName(p.name);
+               setDescription(p.description);
+               setPrice(p.price);
+               setMainPrice(p.mainPrice);
+               setCategory(p.category);
+               setSubCategory(p.subCategory);
+               setProductCollection(p.productCollection);
+               setFit(p.fit);
+               setBestseller(p.bestseller);
+               setSizes(p.sizes);
+               
+               if (p.colors && p.colors.length > 0) {
+                  const populatedColors = p.colors.map(c => {
+                     // Pad images array to 6 elements
+                     const paddedImages = [...c.images];
+                     while (paddedImages.length < 6) paddedImages.push(null);
+                     return { name: c.colorName, images: paddedImages };
+                  });
+                  setColors(populatedColors);
+               }
+            } else {
+               toast.error(response.data.message);
+            }
+         } catch (error) {
+            console.log(error);
+            toast.error(error.message);
+         } finally {
+            setLoading(false);
+         }
+      };
+      fetchProduct();
+   }, [id]);
 
    const handleColorImageChange = (colorIndex, imageIndex, file) => {
       const newColors = [...colors];
@@ -49,6 +93,7 @@ const Add = ({token}) => {
       
       const formData = new FormData()
 
+      formData.append("id", id)
       formData.append("name",name)
       formData.append("description",description)
       formData.append("price",price)
@@ -60,14 +105,19 @@ const Add = ({token}) => {
       formData.append("bestseller",bestseller)
       formData.append("sizes",JSON.stringify(sizes))
 
-      // Append Color Data
-      const colorNames = colors.map(c => c.name);
-      formData.append("colorsData", JSON.stringify(colorNames));
+      // Append Existing Colors Data (urls vs new files)
+      const existingColors = colors.map(c => {
+         return {
+            colorName: c.name,
+            images: c.images.map(img => typeof img === 'string' ? img : null)
+         };
+      });
+      formData.append("existingColors", JSON.stringify(existingColors));
 
-      // Append images for each color
+      // Append new images for each color
       colors.forEach((color, colorIdx) => {
          color.images.forEach((img, imgIdx) => {
-            if (img) {
+            if (img && typeof img !== 'string') {
                formData.append(`image_${color.name}_${imgIdx}`, img);
             }
          });
@@ -83,15 +133,11 @@ const Add = ({token}) => {
          if (colors[0].images[5]) formData.append("image6", colors[0].images[5]);
       }
 
-      const response = await axios.post(backendUrl + "/api/product/add",formData,{headers:{token}})
+      const response = await axios.post(backendUrl + "/api/product/update",formData,{headers:{token}})
 
       if (response.data.success) {
-        toast.success(response.data.message)
-        setName('')
-        setDescription('')
-        setColors([{ name: 'Default', images: [null, null, null, null, null, null] }])
-        setPrice('')
-        setMainPrice('')
+        toast.success("Product Updated Successfully")
+        navigate('/list')
       } else {
         toast.error(response.data.message)
       }
@@ -101,6 +147,10 @@ const Add = ({token}) => {
       toast.error(error.message)
     }
    }
+
+  if (loading) {
+    return <div className="p-8 text-center text-gray-500">Loading product data...</div>
+  }
 
   return (
     <form onSubmit={onSubmitHandler} className='flex flex-col w-full items-start gap-5'>
@@ -124,12 +174,18 @@ const Add = ({token}) => {
                             )}
                         </div>
                         <div className='flex gap-2 flex-wrap'>
-                            {[0, 1, 2, 3, 4, 5].map((imgIdx) => (
+                            {[0, 1, 2, 3, 4, 5].map((imgIdx) => {
+                                const currentImg = color.images[imgIdx];
+                                const imgSrc = !currentImg 
+                                    ? assets.upload_area 
+                                    : (typeof currentImg === 'string' ? currentImg : URL.createObjectURL(currentImg));
+                                return (
                                 <label key={imgIdx} htmlFor={`image_${colorIdx}_${imgIdx}`}>
-                                    <img className='w-20 object-cover rounded cursor-pointer border border-gray-100' src={!color.images[imgIdx] ? assets.upload_area : URL.createObjectURL(color.images[imgIdx])} alt="" />
+                                    <img className='w-20 h-20 object-cover rounded cursor-pointer border border-gray-100' src={imgSrc} alt="" />
                                     <input onChange={(e)=>handleColorImageChange(colorIdx, imgIdx, e.target.files[0])} type="file" id={`image_${colorIdx}_${imgIdx}`} hidden/>
                                 </label>
-                            ))}
+                                )
+                            })}
                         </div>
                     </div>
                 ))}
@@ -231,10 +287,10 @@ const Add = ({token}) => {
           <label className='cursor-pointer' htmlFor="bestseller">Add to bestseller</label>
         </div>
 
-        <button type="submit" className='w-28 py-3 mt-4 bg-black text-white'>ADD</button>
+        <button type="submit" className='w-32 py-3 mt-4 bg-black text-white'>UPDATE</button>
 
     </form>
   )
 }
 
-export default Add
+export default Edit

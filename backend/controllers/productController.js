@@ -44,8 +44,10 @@ const addProduct = async (req, res) => {
             const image2 = req.files.find(f => f.fieldname === 'image2');
             const image3 = req.files.find(f => f.fieldname === 'image3');
             const image4 = req.files.find(f => f.fieldname === 'image4');
+            const image5 = req.files.find(f => f.fieldname === 'image5');
+            const image6 = req.files.find(f => f.fieldname === 'image6');
 
-            const images = [image1, image2, image3, image4].filter((item) => item !== undefined)
+            const images = [image1, image2, image3, image4, image5, image6].filter((item) => item !== undefined)
 
             globalImagesUrl = await Promise.all(
                 images.map(async (item) => {
@@ -77,6 +79,75 @@ const addProduct = async (req, res) => {
         await product.save()
 
         res.json({ success: true, message: "Product Added" })
+
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
+
+// function for update product
+const updateProduct = async (req, res) => {
+    try {
+        const { id, name, description, price, mainPrice, category, subCategory, productCollection, sizes, bestseller, existingColors, fit } = req.body;
+
+        const product = await productModel.findById(id);
+        if (!product) {
+            return res.json({ success: false, message: "Product not found" })
+        }
+
+        let parsedExistingColors = [];
+        if (existingColors) {
+            parsedExistingColors = JSON.parse(existingColors);
+        }
+
+        let finalColors = [];
+        let globalImagesUrl = product.image;
+
+        if (parsedExistingColors.length > 0) {
+            for (let i = 0; i < parsedExistingColors.length; i++) {
+                const colorData = parsedExistingColors[i];
+                const colorName = colorData.colorName;
+                let newColorImagesUrl = [...colorData.images];
+
+                for (let j = 0; j < 6; j++) {
+                    const file = req.files.find(f => f.fieldname === `image_${colorName}_${j}`);
+                    if (file) {
+                        let result = await cloudinary.uploader.upload(file.path, { resource_type: 'image' });
+                        newColorImagesUrl[j] = result.secure_url;
+                    }
+                }
+                
+                newColorImagesUrl = newColorImagesUrl.filter(url => url !== null);
+
+                finalColors.push({
+                    colorName,
+                    images: newColorImagesUrl
+                });
+
+                if (i === 0) {
+                    globalImagesUrl = newColorImagesUrl;
+                }
+            }
+        }
+
+        const updateData = {
+            name,
+            description,
+            category,
+            price: Number(price),
+            mainPrice: mainPrice ? Number(mainPrice) : 0,
+            subCategory,
+            productCollection: productCollection || "None",
+            bestseller: bestseller === "true" ? true : false,
+            fit: fit || "Regular Fit",
+            sizes: JSON.parse(sizes),
+            image: globalImagesUrl,
+            colors: finalColors
+        }
+
+        await productModel.findByIdAndUpdate(id, updateData);
+        res.json({ success: true, message: "Product Updated" });
 
     } catch (error) {
         console.log(error)
@@ -158,4 +229,4 @@ const addProductReview = async (req, res) => {
     }
 }
 
-export { listProducts, addProduct, removeProduct, singleProduct, addProductReview }
+export { listProducts, addProduct, removeProduct, singleProduct, addProductReview, updateProduct }

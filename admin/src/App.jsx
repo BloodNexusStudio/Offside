@@ -3,6 +3,7 @@ import Navbar from './components/Navbar'
 import Sidebar from './components/Sidebar'
 import { Routes, Route } from 'react-router-dom'
 import Add from './pages/Add'
+import Edit from './pages/Edit'
 import List from './pages/List'
 import Orders from './pages/Orders'
 import Dashboard from './pages/Dashboard'
@@ -36,6 +37,7 @@ const App = () => {
                   <Routes>
                     <Route path='/' element={<Dashboard token={token} />} />
                     <Route path='/add' element={<Add token={token} />} />
+                    <Route path='/edit/:id' element={<Edit token={token} />} />
                     <Route path='/list' element={<List token={token} />} />
                     <Route path='/orders' element={<Orders token={token} />} />
                   </Routes>
