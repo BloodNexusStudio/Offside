@@ -26,8 +26,6 @@ const Footer = () => {
           <ul className="flex flex-col gap-4">
             <li><Link to="/collection" className="text-sm font-medium hover:text-gray-400 transition-colors">All Products</Link></li>
             <li><Link to="/collection" className="text-sm font-medium hover:text-gray-400 transition-colors">T-Shirts</Link></li>
-            <li><Link to="/collection" className="text-sm font-medium hover:text-gray-400 transition-colors">Bottomwear</Link></li>
-            <li><Link to="/collection" className="text-sm font-medium hover:text-gray-400 transition-colors">Accessories</Link></li>
           </ul>
         </div>
 
@@ -35,8 +33,6 @@ const Footer = () => {
           <h4 className="text-xs font-bold uppercase tracking-widest mb-6 text-gray-400">Company</h4>
           <ul className="flex flex-col gap-4">
             <li><Link to="/about" className="text-sm font-medium hover:text-gray-400 transition-colors">About Us</Link></li>
-            <li><Link to="/contact" className="text-sm font-medium hover:text-gray-400 transition-colors">Lookbook</Link></li>
-            <li><Link to="#" className="text-sm font-medium hover:text-gray-400 transition-colors">Size Guide</Link></li>
             <li><Link to="/contact" className="text-sm font-medium hover:text-gray-400 transition-colors">Contact</Link></li>
           </ul>
         </div>
