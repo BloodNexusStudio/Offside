@@ -56,7 +56,15 @@ const Navbar = () => {
 
                 <ul className='hidden lg:flex gap-12 text-[13px] font-bold uppercase tracking-widest text-offside-black'>
                     <NavLink to='/' className='group flex flex-col items-center gap-1 relative'>
-                        <span className='hover:opacity-60 transition-opacity'>SHOP</span>
+                        <span className='hover:opacity-60 transition-opacity'>HOME</span>
+                        <hr className='w-full border-none h-[1.5px] bg-offside-black absolute -bottom-2 opacity-0 group-hover:opacity-100 transition-all duration-300' />
+                    </NavLink>
+                    <NavLink to='/collection' className='group flex flex-col items-center gap-1 relative'>
+                        <span className='hover:opacity-60 transition-opacity'>PRODUCTS</span>
+                        <hr className='w-full border-none h-[1.5px] bg-offside-black absolute -bottom-2 opacity-0 group-hover:opacity-100 transition-all duration-300' />
+                    </NavLink>
+                    <NavLink to='/best-sellers' className='group flex flex-col items-center gap-1 relative'>
+                        <span className='hover:opacity-60 transition-opacity'>BEST SELLERS</span>
                         <hr className='w-full border-none h-[1.5px] bg-offside-black absolute -bottom-2 opacity-0 group-hover:opacity-100 transition-all duration-300' />
                     </NavLink>
                     <NavLink to='/collection' className='group flex flex-col items-center gap-1 relative'>
@@ -65,10 +73,6 @@ const Navbar = () => {
                     </NavLink>
                     <NavLink to='/about' className='group flex flex-col items-center gap-1 relative'>
                         <span className='hover:opacity-60 transition-opacity'>ABOUT</span>
-                        <hr className='w-full border-none h-[1.5px] bg-offside-black absolute -bottom-2 opacity-0 group-hover:opacity-100 transition-all duration-300' />
-                    </NavLink>
-                    <NavLink to='/collection' className='group flex flex-col items-center gap-1 relative'>
-                        <span className='hover:opacity-60 transition-opacity'>NEW LAUNCH</span>
                         <hr className='w-full border-none h-[1.5px] bg-offside-black absolute -bottom-2 opacity-0 group-hover:opacity-100 transition-all duration-300' />
                     </NavLink>
                 </ul>
@@ -114,10 +118,11 @@ const Navbar = () => {
                     </div>
                 </div>
                 <div className="flex flex-col px-10 py-10 gap-6">
-                    <NavLink onClick={()=>setVisible(false)} className='text-3xl font-heading uppercase tracking-wide hover:opacity-60 transition-opacity' to='/'>SHOP</NavLink>
+                    <NavLink onClick={()=>setVisible(false)} className='text-3xl font-heading uppercase tracking-wide hover:opacity-60 transition-opacity' to='/'>HOME</NavLink>
+                    <NavLink onClick={()=>setVisible(false)} className='text-3xl font-heading uppercase tracking-wide hover:opacity-60 transition-opacity' to='/collection'>PRODUCTS</NavLink>
+                    <NavLink onClick={()=>setVisible(false)} className='text-3xl font-heading uppercase tracking-wide hover:opacity-60 transition-opacity' to='/best-sellers'>BEST SELLERS</NavLink>
                     <NavLink onClick={()=>setVisible(false)} className='text-3xl font-heading uppercase tracking-wide hover:opacity-60 transition-opacity' to='/collection'>COLLECTIONS</NavLink>
                     <NavLink onClick={()=>setVisible(false)} className='text-3xl font-heading uppercase tracking-wide hover:opacity-60 transition-opacity' to='/about'>ABOUT</NavLink>
-                    <NavLink onClick={()=>setVisible(false)} className='text-3xl font-heading uppercase tracking-wide hover:opacity-60 transition-opacity' to='/collection'>NEW LAUNCH</NavLink>
                 </div>
             </div>
         </div>
