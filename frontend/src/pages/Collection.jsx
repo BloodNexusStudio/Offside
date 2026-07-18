@@ -192,11 +192,6 @@ const Collection = () => {
                     <option value="low-high">Sort By: Low to High</option>
                     <option value="high-low">Sort By: High to Low</option>
                   </select>
-                  
-                  {/* Settings Icon Button */}
-                  <button className='p-2.5 bg-offside-black text-white rounded-md hover:opacity-80 transition-opacity'>
-                    <SlidersHorizontal className="w-4 h-4" />
-                  </button>
               </div>
           </div>
 
