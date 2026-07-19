@@ -179,7 +179,14 @@ const Add = ({token}) => {
 
             <div>
               <p className='mb-2'>Collection (Optional)</p>
-              <input onChange={(e) => setProductCollection(e.target.value)} value={productCollection} className='w-full px-3 py-2 sm:w-[150px]' type="text" placeholder='e.g. FIFA' />
+              <select onChange={(e) => setProductCollection(e.target.value)} value={productCollection} className='w-full px-3 py-2 sm:w-[150px]'>
+                  <option value="None">None</option>
+                  <option value="Essentials">Essentials</option>
+                  <option value="FIFA">FIFA</option>
+                  <option value="Hip-Hop">Hip-Hop</option>
+                  <option value="Gaming">Gaming</option>
+                  <option value="Anime">Anime</option>
+              </select>
             </div>
 
             <div>
