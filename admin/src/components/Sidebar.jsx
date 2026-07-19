@@ -47,7 +47,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     </ul>
                 </div>
 
-                {/* Coming Soon Links to match design loosely */}
                 <div>
                     <h3 className="text-xs font-semibold text-gray-400 tracking-wider mb-3">MANAGEMENT</h3>
                     <ul className="space-y-1">
@@ -58,10 +57,16 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                             </div>
                         </li>
                         <li>
-                            <div className="group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-gray-400 cursor-not-allowed">
+                            <NavLink onClick={() => setSidebarOpen(false)} to="/reviews" className={({ isActive }) => `group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium ${isActive ? 'bg-gray-100 text-offside-black' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}>
                                 <Star className="h-5 w-5 shrink-0" />
                                 Reviews
-                            </div>
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink onClick={() => setSidebarOpen(false)} to="/collections" className={({ isActive }) => `group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium ${isActive ? 'bg-gray-100 text-offside-black' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}>
+                                <Package className="h-5 w-5 shrink-0" />
+                                Collections
+                            </NavLink>
                         </li>
                     </ul>
                 </div>

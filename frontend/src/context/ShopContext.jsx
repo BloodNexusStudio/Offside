@@ -17,6 +17,7 @@ const ShopContextProvider = (props) => {
         return localData ? JSON.parse(localData) : {};
     });
     const [products, setProducts] = useState([]);
+    const [collections, setCollections] = useState([]);
     const [token, setToken] = useState('')
     const navigate = useNavigate();
 
@@ -153,12 +154,16 @@ const ShopContextProvider = (props) => {
 
     const getProductsData = async () => {
         try {
-
             const response = await axios.get(backendUrl + '/api/product/list')
             if (response.data.success) {
                 setProducts(response.data.products.reverse())
             } else {
                 toast.error(response.data.message)
+            }
+
+            const colResponse = await axios.get(backendUrl + '/api/collection/list')
+            if (colResponse.data.success) {
+                setCollections(colResponse.data.collections.reverse())
             }
 
         } catch (error) {
@@ -237,7 +242,8 @@ const ShopContextProvider = (props) => {
         getCartCount, updateQuantity,
         getCartAmount, navigate, backendUrl,
         setToken, token,
-        favourites, toggleFavourite
+        favourites, toggleFavourite,
+        collections
     }
 
     return (

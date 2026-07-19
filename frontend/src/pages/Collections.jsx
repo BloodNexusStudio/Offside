@@ -1,48 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { assets } from '../assets/assets'
 import { ArrowRight } from 'lucide-react'
+import { ShopContext } from '../context/ShopContext'
 
 const Collections = () => {
     const navigate = useNavigate()
-
-    const collections = [
-        {
-            id: '01',
-            title: 'ESSENTIALS',
-            subtitle: 'Built for everyday.',
-            image: assets.collection_essentials,
-            theme: 'Essentials'
-        },
-        {
-            id: '02',
-            title: 'FIFA',
-            subtitle: 'Inspired by the Beautiful Game.',
-            image: assets.collection_fifa,
-            theme: 'FIFA'
-        },
-        {
-            id: '03',
-            title: 'HIP-HOP',
-            subtitle: 'Music. Culture. Attitude.',
-            image: assets.collection_hiphop,
-            theme: 'Hip-Hop'
-        },
-        {
-            id: '04',
-            title: 'GAMING',
-            subtitle: 'Play Beyond Reality.',
-            image: assets.collection_gaming,
-            theme: 'Gaming'
-        },
-        {
-            id: '05',
-            title: 'ANIME',
-            subtitle: 'Wear Your Favorite Worlds.',
-            image: assets.collection_anime,
-            theme: 'Anime'
-        }
-    ]
+    const { collections } = useContext(ShopContext)
 
     const handleExplore = (theme) => {
         navigate(`/collection?theme=${theme}`)
@@ -63,7 +26,7 @@ const Collections = () => {
                     <div 
                         key={index}
                         className="group relative h-[400px] lg:h-full overflow-hidden rounded-md cursor-pointer"
-                        onClick={() => handleExplore(col.theme)}
+                        onClick={() => handleExplore(col.name)}
                     >
                         {/* Background Image */}
                         <div 
@@ -77,12 +40,12 @@ const Collections = () => {
                         {/* Content */}
                         <div className="absolute bottom-0 left-0 w-full p-6 flex flex-col justify-end h-full text-white">
                             <div className="flex items-center gap-3 mb-2 opacity-80">
-                                <span className="text-[#c6a87c] text-sm font-medium">{col.id}</span>
+                                <span className="text-[#c6a87c] text-sm font-medium">0{index + 1}</span>
                                 <div className="h-[1px] w-6 bg-[#c6a87c]"></div>
                             </div>
                             
                             <h2 className="text-3xl md:text-4xl font-heading font-bold tracking-wide uppercase mb-2">
-                                {col.title}
+                                {col.name}
                             </h2>
                             
                             <p className="text-sm text-gray-300 mb-8 max-w-[200px]">

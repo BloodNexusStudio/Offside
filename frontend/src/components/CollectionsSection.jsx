@@ -1,45 +1,13 @@
-import React, { useRef } from 'react';
+import React, { useRef, useContext } from 'react';
 import { motion } from 'framer-motion';
-import { assets } from '../assets/assets';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { ShopContext } from '../context/ShopContext';
 
 const CollectionsSection = () => {
   const scrollRef = useRef(null);
   const navigate = useNavigate();
-
-  const collections = [
-    {
-        title: "ESSENTIALS",
-        subtitle: "Built for everyday.",
-        image: assets.collection_essentials,
-        theme: "Essentials"
-    },
-    {
-        title: "FIFA",
-        subtitle: "Inspired by the Beautiful Game.",
-        image: assets.collection_fifa,
-        theme: "FIFA"
-    },
-    {
-        title: "HIP-HOP",
-        subtitle: "Music. Culture. Attitude.",
-        image: assets.collection_hiphop,
-        theme: "Hip-Hop"
-    },
-    {
-        title: "GAMING",
-        subtitle: "Play Beyond Reality.",
-        image: assets.collection_gaming,
-        theme: "Gaming"
-    },
-    {
-        title: "ANIME",
-        subtitle: "Wear Your Favorite Worlds.",
-        image: assets.collection_anime,
-        theme: "Anime"
-    }
-  ];
+  const { collections } = useContext(ShopContext);
 
   const scroll = (direction) => {
     if (scrollRef.current) {
@@ -84,7 +52,7 @@ const CollectionsSection = () => {
                         viewport={{ once: true }}
                         transition={{ duration: 0.6, delay: index * 0.1 }}
                         className="flex-none w-[85vw] sm:w-[350px] md:w-[400px] lg:w-[450px] aspect-[3/4] snap-center relative group overflow-hidden cursor-pointer rounded-md bg-black"
-                        onClick={() => navigate(`/collection?theme=${col.theme}`)}
+                        onClick={() => navigate(`/collection?theme=${col.name}`)}
                     >
                         {/* Background Image */}
                         <div 
@@ -101,7 +69,7 @@ const CollectionsSection = () => {
                                 0{index + 1}
                             </span>
                             <h4 className="text-3xl md:text-4xl font-heading font-bold uppercase tracking-wide mb-2">
-                                {col.title}
+                                {col.name}
                             </h4>
                             <p className="text-sm text-gray-300 mb-6">
                                 {col.subtitle}

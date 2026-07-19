@@ -27,7 +27,22 @@ const Edit = ({token}) => {
    const [unisex, setUnisex] = useState(false);
    const [sizes, setSizes] = useState([]);
    const [reviews, setReviews] = useState([]);
+   const [collections, setCollections] = useState([]);
    const [loading, setLoading] = useState(true);
+
+   useEffect(() => {
+      const fetchCollections = async () => {
+         try {
+            const response = await axios.get(backendUrl + '/api/collection/list');
+            if (response.data.success) {
+               setCollections(response.data.collections);
+            }
+         } catch (error) {
+            console.log(error);
+         }
+      };
+      fetchCollections();
+   }, []);
 
    useEffect(() => {
       const fetchProduct = async () => {
@@ -315,11 +330,9 @@ const Edit = ({token}) => {
               <p className='mb-2'>Collection (Optional)</p>
               <select onChange={(e) => setProductCollection(e.target.value)} value={productCollection} className='w-full px-3 py-2 sm:w-[150px]'>
                   <option value="None">None</option>
-                  <option value="Essentials">Essentials</option>
-                  <option value="FIFA">FIFA</option>
-                  <option value="Hip-Hop">Hip-Hop</option>
-                  <option value="Gaming">Gaming</option>
-                  <option value="Anime">Anime</option>
+                  {collections.map((col) => (
+                      <option key={col._id} value={col.name}>{col.name}</option>
+                  ))}
               </select>
             </div>
 
