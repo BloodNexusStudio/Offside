@@ -67,7 +67,7 @@ const Navbar = () => {
                         <span className='hover:opacity-60 transition-opacity'>BEST SELLERS</span>
                         <hr className='w-full border-none h-[1.5px] bg-offside-black absolute -bottom-2 opacity-0 group-hover:opacity-100 transition-all duration-300' />
                     </NavLink>
-                    <NavLink to='/collection' className='group flex flex-col items-center gap-1 relative'>
+                    <NavLink to='/collections' className='group flex flex-col items-center gap-1 relative'>
                         <span className='hover:opacity-60 transition-opacity flex items-center gap-1'>COLLECTIONS <ChevronDown className="w-3 h-3" /></span>
                         <hr className='w-full border-none h-[1.5px] bg-offside-black absolute -bottom-2 opacity-0 group-hover:opacity-100 transition-all duration-300' />
                     </NavLink>
@@ -121,7 +121,7 @@ const Navbar = () => {
                     <NavLink onClick={()=>setVisible(false)} className='text-3xl font-heading uppercase tracking-wide hover:opacity-60 transition-opacity' to='/'>HOME</NavLink>
                     <NavLink onClick={()=>setVisible(false)} className='text-3xl font-heading uppercase tracking-wide hover:opacity-60 transition-opacity' to='/collection'>PRODUCTS</NavLink>
                     <NavLink onClick={()=>setVisible(false)} className='text-3xl font-heading uppercase tracking-wide hover:opacity-60 transition-opacity' to='/best-sellers'>BEST SELLERS</NavLink>
-                    <NavLink onClick={()=>setVisible(false)} className='text-3xl font-heading uppercase tracking-wide hover:opacity-60 transition-opacity' to='/collection'>COLLECTIONS</NavLink>
+                    <NavLink onClick={()=>setVisible(false)} className='text-3xl font-heading uppercase tracking-wide hover:opacity-60 transition-opacity' to='/collections'>COLLECTIONS</NavLink>
                     <NavLink onClick={()=>setVisible(false)} className='text-3xl font-heading uppercase tracking-wide hover:opacity-60 transition-opacity' to='/about'>ABOUT</NavLink>
                 </div>
             </div>

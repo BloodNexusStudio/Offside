@@ -12,6 +12,7 @@ import PlaceOrder from './pages/PlaceOrder'
 import Orders from './pages/Orders'
 import Profile from './pages/Profile'
 import BestSellers from './pages/BestSellers'
+import Collections from './pages/Collections'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import SearchBar from './components/SearchBar'
@@ -42,6 +43,7 @@ const App = () => {
             <Route path='/' element={<PageTransition><Home /></PageTransition>} />
             <Route path='/collection' element={<PageTransition><Collection /></PageTransition>} />
             <Route path='/best-sellers' element={<PageTransition><BestSellers /></PageTransition>} />
+            <Route path='/collections' element={<PageTransition><Collections /></PageTransition>} />
             <Route path='/about' element={<PageTransition><About /></PageTransition>} />
             <Route path='/contact' element={<PageTransition><Contact /></PageTransition>} />
             <Route path='/product/:productId' element={<PageTransition><Product /></PageTransition>} />

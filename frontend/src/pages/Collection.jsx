@@ -3,6 +3,7 @@ import { ShopContext } from '../context/ShopContext'
 import { assets } from '../assets/assets';
 import CollectionProductItem from '../components/CollectionProductItem';
 import { RefreshCw, SlidersHorizontal } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 
 const Collection = () => {
 
@@ -13,6 +14,10 @@ const Collection = () => {
   const [subCategory,setSubCategory] = useState([]);
   const [sizeFilter,setSizeFilter] = useState([]);
   const [sortType,setSortType] = useState('relavent')
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const themeParam = queryParams.get('theme');
 
   const toggleCategory = (e) => {
     if (category.includes(e.target.value)) {
@@ -67,6 +72,10 @@ const Collection = () => {
       productsCopy = productsCopy.filter(item => item.sizes && item.sizes.some(size => sizeFilter.includes(size)))
     }
 
+    if (themeParam) {
+      productsCopy = productsCopy.filter(item => item.productCollection === themeParam)
+    }
+
     setFilterProducts(productsCopy)
   }
 
@@ -88,7 +97,7 @@ const Collection = () => {
 
   useEffect(()=>{
       applyFilter();
-  },[category,subCategory,sizeFilter,search,showSearch,products])
+  },[category,subCategory,sizeFilter,search,showSearch,products,themeParam])
 
   useEffect(()=>{
     sortProduct();

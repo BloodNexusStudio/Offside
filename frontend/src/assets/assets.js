@@ -74,6 +74,12 @@ import razorpay_logo from './razorpay_logo.png'
 import stripe_logo from './stripe_logo.png'
 import cross_icon from './cross_icon.png'
 
+import collection_essentials from './collection_essentials.jpg'
+import collection_fifa from './collection_fifa.jpg'
+import collection_hiphop from './collection_hiphop.jpg'
+import collection_gaming from './collection_gaming.jpg'
+import collection_anime from './collection_anime.jpg'
+
 export const assets = {
     logo: new_logo,
     hero_img,
@@ -92,7 +98,12 @@ export const assets = {
     contact_img,
     razorpay_logo,
     stripe_logo,
-    cross_icon
+    cross_icon,
+    collection_essentials,
+    collection_fifa,
+    collection_hiphop,
+    collection_gaming,
+    collection_anime
 }
 
 export const products = [
