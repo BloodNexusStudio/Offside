@@ -181,7 +181,7 @@ const Collection = () => {
                   <p className='text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1'>All Products</p>
                   <div className='flex items-baseline gap-3'>
                     <h1 className='text-3xl sm:text-4xl font-heading font-bold text-offside-black uppercase tracking-wide'>
-                        All Collections
+                        {themeParam ? `${themeParam} Collection` : "All Collections"}
                     </h1>
                     <span className='text-[11px] font-bold uppercase tracking-widest text-gray-400'>
                         / {filterProducts.length} Products
