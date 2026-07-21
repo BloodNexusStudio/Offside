@@ -6,7 +6,7 @@ import userModel from "../models/userModel.js"
 const addProduct = async (req, res) => {
     try {
 
-        const { name, description, price, mainPrice, category, subCategory, productCollection, sizes, bestseller, newDrop, colorsData, fit } = req.body
+        const { name, description, price, mainPrice, category, subCategory, productCollection, sizes, bestseller, newDrop, unisex, colorsData, fit } = req.body
 
         let parsedColorsData = [];
         if (colorsData) {
@@ -20,7 +20,7 @@ const addProduct = async (req, res) => {
             for (let i = 0; i < parsedColorsData.length; i++) {
                 const colorName = parsedColorsData[i];
                 // Find all files matching this color: image_{colorName}_{index}
-                const colorFiles = req.files.filter(file => file.fieldname.startsWith(`image_${colorName}_`));
+                const colorFiles = (req.files || []).filter(file => file.fieldname.startsWith(`image_${colorName}_`));
                 
                 let colorImagesUrl = await Promise.all(
                     colorFiles.map(async (item) => {
@@ -40,12 +40,12 @@ const addProduct = async (req, res) => {
             }
         } else {
             // Backward compatibility for forms without colors
-            const image1 = req.files.find(f => f.fieldname === 'image1');
-            const image2 = req.files.find(f => f.fieldname === 'image2');
-            const image3 = req.files.find(f => f.fieldname === 'image3');
-            const image4 = req.files.find(f => f.fieldname === 'image4');
-            const image5 = req.files.find(f => f.fieldname === 'image5');
-            const image6 = req.files.find(f => f.fieldname === 'image6');
+            const image1 = (req.files || []).find(f => f.fieldname === 'image1');
+            const image2 = (req.files || []).find(f => f.fieldname === 'image2');
+            const image3 = (req.files || []).find(f => f.fieldname === 'image3');
+            const image4 = (req.files || []).find(f => f.fieldname === 'image4');
+            const image5 = (req.files || []).find(f => f.fieldname === 'image5');
+            const image6 = (req.files || []).find(f => f.fieldname === 'image6');
 
             const images = [image1, image2, image3, image4, image5, image6].filter((item) => item !== undefined)
 
@@ -113,7 +113,7 @@ const updateProduct = async (req, res) => {
                 let newColorImagesUrl = [...colorData.images];
 
                 for (let j = 0; j < 6; j++) {
-                    const file = req.files.find(f => f.fieldname === `image_${colorName}_${j}`);
+                    const file = (req.files || []).find(f => f.fieldname === `image_${colorName}_${j}`);
                     if (file) {
                         let result = await cloudinary.uploader.upload(file.path, { resource_type: 'image' });
                         newColorImagesUrl[j] = result.secure_url;
