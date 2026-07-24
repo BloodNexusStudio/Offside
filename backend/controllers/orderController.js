@@ -6,7 +6,6 @@ import sendInvoice from "../utils/sendInvoice.js";
 
 // global variables
 const currency = 'inr'
-const deliveryCharge = 10
 
 // gateway initialize
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
@@ -81,13 +80,16 @@ const placeOrderStripe = async (req,res) => {
             quantity: item.quantity
         }))
 
+        const itemsTotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const dynamicDeliveryCharge = itemsTotal > 1499 ? 0 : 60;
+
         line_items.push({
             price_data: {
                 currency:currency,
                 product_data: {
                     name:'Delivery Charges'
                 },
-                unit_amount: deliveryCharge * 100
+                unit_amount: dynamicDeliveryCharge * 100
             },
             quantity: 1
         })
